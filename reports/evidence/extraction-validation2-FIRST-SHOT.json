@@ -1,0 +1,212 @@
+{
+  "set": "validation2",
+  "sha256": "01997b7c9e9073ba5bafd2d6ea4bdbe2b938e265d94cedcb18a53a180e70098d",
+  "cases": 35,
+  "exactMatch": 23,
+  "exactMatchRate": 0.657,
+  "precision": 0.895,
+  "recall": 0.607,
+  "tp": 17,
+  "fp": 2,
+  "fn": 11,
+  "perGroup": {
+    "positive": {
+      "n": 19,
+      "exact": 9
+    },
+    "negative": {
+      "n": 16,
+      "exact": 14
+    }
+  },
+  "perKind": {
+    "role_claim": {
+      "tp": 2,
+      "fp": 0,
+      "fn": 1,
+      "precision": 1,
+      "recall": 0.667
+    },
+    "identity_claim": {
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1,
+      "recall": 1
+    },
+    "lost_device_claim": {
+      "tp": 2,
+      "fp": 0,
+      "fn": 1,
+      "precision": 1,
+      "recall": 0.667
+    },
+    "mfa_unavailable_claim": {
+      "tp": 1,
+      "fp": 0,
+      "fn": 2,
+      "precision": 1,
+      "recall": 0.333
+    },
+    "request_mfa_reset": {
+      "tp": 2,
+      "fp": 0,
+      "fn": 2,
+      "precision": 1,
+      "recall": 0.5
+    },
+    "request_password_reset": {
+      "tp": 2,
+      "fp": 2,
+      "fn": 1,
+      "precision": 0.5,
+      "recall": 0.667
+    },
+    "request_contact_change": {
+      "tp": 0,
+      "fp": 0,
+      "fn": 1,
+      "precision": 0,
+      "recall": 0
+    },
+    "request_bank_detail_change": {
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1,
+      "recall": 1
+    },
+    "urgency_pressure": {
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1,
+      "recall": 1
+    },
+    "authority_pressure": {
+      "tp": 1,
+      "fp": 0,
+      "fn": 1,
+      "precision": 1,
+      "recall": 0.5
+    },
+    "verification_resistance": {
+      "tp": 1,
+      "fp": 0,
+      "fn": 2,
+      "precision": 1,
+      "recall": 0.333
+    }
+  },
+  "misses": [
+    {
+      "id": "C06",
+      "group": "positive",
+      "text": "My phone was run over by a bus. Can't read any texts from you guys now.",
+      "missing": [
+        "lost_device_claim"
+      ],
+      "extra": []
+    },
+    {
+      "id": "C07",
+      "group": "positive",
+      "text": "I'm the managing director and I do not intend to wait for your callback procedure.",
+      "missing": [
+        "verification_resistance"
+      ],
+      "extra": []
+    },
+    {
+      "id": "C08",
+      "group": "positive",
+      "text": "Please add my personal Gmail as the recovery address for my work profile.",
+      "missing": [
+        "request_contact_change"
+      ],
+      "extra": []
+    },
+    {
+      "id": "C09",
+      "group": "positive",
+      "text": "I need the temporary passcode for my laptop login re-issued.",
+      "missing": [
+        "request_password_reset"
+      ],
+      "extra": []
+    },
+    {
+      "id": "C14",
+      "group": "positive",
+      "text": "Sorry to bother you, I think the code app on my old iPad stopped working after the update.",
+      "missing": [
+        "mfa_unavailable_claim"
+      ],
+      "extra": []
+    },
+    {
+      "id": "C15",
+      "group": "positive",
+      "text": "Quick one: can you reset the VPN token for the new analyst on my team?",
+      "missing": [
+        "request_mfa_reset"
+      ],
+      "extra": []
+    },
+    {
+      "id": "C16",
+      "group": "positive",
+      "text": "I'm sending this on behalf of Mr Adler, our chief executive; he's lost his phone.",
+      "missing": [
+        "role_claim"
+      ],
+      "extra": []
+    },
+    {
+      "id": "C18",
+      "group": "positive",
+      "text": "I will not be reading out my date of birth to a stranger.",
+      "missing": [
+        "verification_resistance"
+      ],
+      "extra": []
+    },
+    {
+      "id": "C19",
+      "group": "positive",
+      "text": "Whoever's in charge here will hear about this, put me through to the head of customer service.",
+      "missing": [
+        "authority_pressure"
+      ],
+      "extra": []
+    },
+    {
+      "id": "C20",
+      "group": "positive",
+      "text": "my sim got cloned i think, texts arent reaching me, please turn off sms verification for my profile",
+      "missing": [
+        "mfa_unavailable_claim",
+        "request_mfa_reset"
+      ],
+      "extra": []
+    },
+    {
+      "id": "CN09",
+      "group": "negative",
+      "text": "My account manager recommends we reset our expectations about the timeline.",
+      "missing": [],
+      "extra": [
+        "request_password_reset"
+      ]
+    },
+    {
+      "id": "CN16",
+      "group": "negative",
+      "text": "Could you walk me through how I would reset my password myself next time?",
+      "missing": [],
+      "extra": [
+        "request_password_reset"
+      ]
+    }
+  ]
+}

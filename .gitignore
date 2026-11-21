@@ -1,0 +1,41 @@
+# ---- Secrets and credentials (never commit) ----
+.env
+.env.*
+!.env.example
+secrets/
+*.pem
+!config/trust-anchor.pem
+*.key
+*.p12
+*.pfx
+*.jks
+id_rsa*
+id_ed25519*
+credentials*.json
+service-account*.json
+
+# ---- Dependencies and build output ----
+node_modules/
+web/node_modules/
+dist/
+web/dist/
+coverage/
+*.tsbuildinfo
+
+# ---- Logs, temporary and editor/OS files ----
+*.log
+npm-debug.log*
+*.tmp
+*.temp
+*.swp
+*~
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+.claude/
+
+# ---- Generated reports: ignored by default; only the curated, sanitized evidence files below are kept ----
+reports/*
+!reports/README.md
+!reports/evidence/

@@ -1,0 +1,42 @@
+// VALIDATION batch C for Agent A's extraction. Written AFTER all Phase-4 extraction fixes (which were driven by
+// batches A and B), hashed (validation2.sha256) and scored ONCE. No rule is changed in response to its results.
+// Same-author caveat applies; this is synthetic, NOT real help-desk data. Labels were fixed before running.
+export const VALIDATION2 = [
+  { id: 'C01', group: 'positive', text: "Evening, Rafael Ortiz here. I've dropped my mobile in the sea and need my login approvals moved to a spare handset.", expected: ['identity_claim', 'lost_device_claim', 'request_mfa_reset'] },
+  { id: 'C02', group: 'positive', text: "We're locked out of the finance portal, the CFO needs access this minute.", expected: ['urgency_pressure'] },
+  { id: 'C03', group: 'positive', text: 'Could somebody wipe the authenticator registered to my account and let me enrol a new one?', expected: ['request_mfa_reset'] },
+  { id: 'C04', group: 'positive', text: "I think my account is compromised and I'd like you to change my password straight away.", expected: ['request_password_reset', 'urgency_pressure'] },
+  { id: 'C05', group: 'positive', text: "This is Lucia Fernandes, I work in treasury, and I need our supplier's banking details changed today.", expected: ['identity_claim', 'role_claim', 'request_bank_detail_change'] },
+  { id: 'C06', group: 'positive', text: "My phone was run over by a bus. Can't read any texts from you guys now.", expected: ['lost_device_claim', 'mfa_unavailable_claim'] },
+  { id: 'C07', group: 'positive', text: "I'm the managing director and I do not intend to wait for your callback procedure.", expected: ['role_claim', 'verification_resistance'] },
+  { id: 'C08', group: 'positive', text: 'Please add my personal Gmail as the recovery address for my work profile.', expected: ['request_contact_change'] },
+  { id: 'C09', group: 'positive', text: 'I need the temporary passcode for my laptop login re-issued.', expected: ['request_password_reset'] },
+  { id: 'C10', group: 'positive', text: "My supervisor's furious that I can't log in and says she'll have me disciplined.", expected: ['authority_pressure'] },
+  { id: 'C11', group: 'positive', text: "No need for your questions, I've been a customer for twenty years.", expected: ['verification_resistance'] },
+  { id: 'C13', group: 'positive', text: "I'm out of the country and my bank card was stolen, please redirect my salary to my sister's account.", expected: ['request_bank_detail_change'] },
+  { id: 'C14', group: 'positive', text: 'Sorry to bother you, I think the code app on my old iPad stopped working after the update.', expected: ['mfa_unavailable_claim'] },
+  { id: 'C15', group: 'positive', text: 'Quick one: can you reset the VPN token for the new analyst on my team?', expected: ['request_mfa_reset'] },
+  { id: 'C16', group: 'positive', text: "I'm sending this on behalf of Mr Adler, our chief executive; he's lost his phone.", expected: ['role_claim', 'lost_device_claim'] },
+  { id: 'C17', group: 'positive', text: "Can't talk long, I'm about to board. Reset my access now please.", expected: ['request_password_reset'] },
+  { id: 'C18', group: 'positive', text: 'I will not be reading out my date of birth to a stranger.', expected: ['verification_resistance'] },
+  { id: 'C19', group: 'positive', text: "Whoever's in charge here will hear about this, put me through to the head of customer service.", expected: ['authority_pressure'] },
+  { id: 'C20', group: 'positive', text: 'my sim got cloned i think, texts arent reaching me, please turn off sms verification for my profile', expected: ['mfa_unavailable_claim', 'request_mfa_reset'] },
+
+  // ---- benign / tricky negatives ----
+  { id: 'CN01', group: 'negative', text: "The new starter's laptop hasn't arrived and she needs her accounts created before nine.", expected: [] },
+  { id: 'CN02', group: 'negative', text: "I'd like to understand why my password expires every ninety days.", expected: [] },
+  { id: 'CN03', group: 'negative', text: 'Heads up, the fire alarm test is at noon, nothing to do with accounts.', expected: [] },
+  { id: 'CN04', group: 'negative', text: "I'm calling to say thank you, the new authenticator rollout went smoothly.", expected: [] },
+  { id: 'CN05', group: 'negative', text: 'Could you check whether Marcus in sales has a valid contract number on file?', expected: [] },
+  { id: 'CN06', group: 'negative', text: "I'm so annoyed, my phone's stuck on a software update and I've missed the football.", expected: [] },
+  { id: 'CN07', group: 'negative', text: 'He lost his temper, but we got the problem solved quickly in the end.', expected: [] },
+  { id: 'CN08', group: 'negative', text: 'Please change the batteries in the conference phone, it keeps dying.', expected: [] },
+  { id: 'CN09', group: 'negative', text: 'My account manager recommends we reset our expectations about the timeline.', expected: [] },
+  { id: 'CN10', group: 'negative', text: "Who do I speak to about the director's vacation request form?", expected: [] },
+  { id: 'CN11', group: 'negative', text: "Just confirming: I've NOT lost my phone, I just need the sync fixed.", expected: [] },
+  { id: 'CN12', group: 'negative', text: "I need to move my 2pm meeting, it clashes with the board call.", expected: [] },
+  { id: 'CN13', group: 'negative', text: 'We are updating our bank holiday rota, no action needed.', expected: [] },
+  { id: 'CN14', group: 'negative', text: "I'm a long-standing customer and I think the new phone plan is brilliant.", expected: [] },
+  { id: 'CN15', group: 'negative', text: "What time is the security training on Wednesday? I'm hoping to skip the afternoon session.", expected: [] },
+  { id: 'CN16', group: 'negative', text: 'Could you walk me through how I would reset my password myself next time?', expected: [] },
+];

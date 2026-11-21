@@ -1,0 +1,6 @@
+# Normalise line endings for source files.
+* text=auto
+
+# The frozen extraction evaluation sets are verified by a SHA-256 of their exact bytes (src/evalExtraction.js).
+# Never convert their line endings (e.g. LF -> CRLF on a Windows checkout with core.autocrlf=true), or the hash check would fail.
+test/fixtures/* -text

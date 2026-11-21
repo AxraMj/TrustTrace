@@ -1,0 +1,2271 @@
+{
+  "generatedAt": "2026-11-21T12:46:55.819Z",
+  "results": [
+    {
+      "suite": "CORE",
+      "id": "S1",
+      "title": "Normal login from a known device",
+      "expected": {
+        "actions": [
+          "allow"
+        ],
+        "severities": [
+          "low"
+        ],
+        "memoriesRetrieved": false,
+        "influences": []
+      },
+      "classification": "correct",
+      "actual": {
+        "action": "allow",
+        "baseAction": "allow",
+        "severity": "low",
+        "rawScore": 0,
+        "displayScore": 0
+      },
+      "memoriesRetrieved": 0,
+      "influencing": [],
+      "rejected": [],
+      "policy": [],
+      "stepUp": {
+        "required": false,
+        "requirements": []
+      },
+      "retrievalComplete": true,
+      "counterfactual": {
+        "withoutMeko": {
+          "rawScore": 0,
+          "severity": "low",
+          "action": "allow"
+        },
+        "withoutPattern": null
+      },
+      "explanation": [
+        "[TOTAL] raw 0 -> severity low (display 0/100) -> base action allow"
+      ],
+      "checks": {
+        "actionCorrect": true,
+        "severityOk": true,
+        "retrievedOk": true,
+        "influenceOk": true,
+        "rejectedOk": true,
+        "policyOk": true,
+        "evidenceOk": true,
+        "noTrustFromRejected": true,
+        "indexed": true
+      },
+      "pass": true,
+      "timings": {
+        "agentExtractMs": 0,
+        "mekoWriteMs": 0,
+        "indexWaitMs": 0,
+        "retrievalMs": 1871.2,
+        "scoringMs": 0.7
+      }
+    },
+    {
+      "suite": "CORE",
+      "id": "S2",
+      "title": "Suspicious help-desk call, then a routine login",
+      "expected": {
+        "actions": [
+          "step_up"
+        ],
+        "severities": [
+          "medium"
+        ],
+        "memoriesRetrieved": true,
+        "influences": [
+          "context"
+        ]
+      },
+      "classification": "correct",
+      "actual": {
+        "action": "step_up",
+        "baseAction": "step_up",
+        "severity": "medium",
+        "rawScore": 27.5,
+        "displayScore": 42.3
+      },
+      "memoriesRetrieved": 6,
+      "influencing": [
+        {
+          "memoryId": "mem-01",
+          "source": "context",
+          "label": "OBSERVED",
+          "kind": "caller_id_mismatch",
+          "effect": 7.5,
+          "statement": "Inbound caller ID does not match the number on file."
+        },
+        {
+          "memoryId": "mem-02",
+          "source": "context",
+          "label": "CLAIMED",
+          "kind": "request_password_reset",
+          "effect": 5,
+          "statement": "Caller requests a password reset."
+        },
+        {
+          "memoryId": "mem-03",
+          "source": "context",
+          "label": "OBSERVED",
+          "kind": "verification_resistance",
+          "effect": 7.5,
+          "statement": "Caller resisted or tried to skip verification."
+        },
+        {
+          "memoryId": "mem-04",
+          "source": "context",
+          "label": "CLAIMED",
+          "kind": "role_claim",
+          "effect": 2.5,
+          "statement": "Caller claims the role of DIRECTOR."
+        },
+        {
+          "memoryId": "mem-05",
+          "source": "context",
+          "label": "OBSERVED",
+          "kind": "urgency_pressure",
+          "effect": 5,
+          "statement": "Caller applied urgency/time pressure."
+        }
+      ],
+      "rejected": [],
+      "policy": [],
+      "stepUp": {
+        "required": true,
+        "requirements": [
+          "Re-authenticate with an existing, already-registered MFA factor."
+        ]
+      },
+      "retrievalComplete": true,
+      "counterfactual": {
+        "withoutMeko": {
+          "rawScore": 0,
+          "severity": "low",
+          "action": "allow"
+        },
+        "withoutPattern": null
+      },
+      "explanation": [
+        "[OBSERVED +7.5] Inbound caller ID does not match the number on file. (base 15, x0.5 routine event)",
+        "[CLAIMED +5] \"Caller requests a password reset.\" - unverified caller statement; treated as a risk signal, NOT as a fact. (base 10, x0.5 routine event)",
+        "[OBSERVED +7.5] Caller resisted or tried to skip verification. (base 15, x0.5 routine event)",
+        "[CLAIMED +2.5] \"Caller claims the role of DIRECTOR.\" - unverified caller statement; treated as a risk signal, NOT as a fact. (base 5, x0.5 routine event)",
+        "[OBSERVED +5] Caller applied urgency/time pressure. (base 10, x0.5 routine event)",
+        "[CLAIMED +0] \"Caller claims to be Marcus Lee.\" - unverified caller statement; treated as a risk signal, NOT as a fact. (base 0, x0.5 routine event)",
+        "[TOTAL] raw 27.5 -> severity medium (display 42.3/100) -> base action step_up"
+      ],
+      "checks": {
+        "actionCorrect": true,
+        "severityOk": true,
+        "retrievedOk": true,
+        "influenceOk": true,
+        "rejectedOk": true,
+        "policyOk": true,
+        "evidenceOk": true,
+        "noTrustFromRejected": true,
+        "indexed": true
+      },
+      "pass": true,
+      "timings": {
+        "agentExtractMs": 7.3,
+        "mekoWriteMs": 3710.2,
+        "indexWaitMs": 1028,
+        "retrievalMs": 916.9,
+        "scoringMs": 0.4
+      }
+    },
+    {
+      "suite": "CORE",
+      "id": "S3",
+      "title": "Login from an unrecognized device and country",
+      "expected": {
+        "actions": [
+          "step_up"
+        ],
+        "severities": [
+          "medium"
+        ],
+        "memoriesRetrieved": false,
+        "influences": []
+      },
+      "classification": "correct",
+      "actual": {
+        "action": "step_up",
+        "baseAction": "step_up",
+        "severity": "medium",
+        "rawScore": 30,
+        "displayScore": 45.1
+      },
+      "memoriesRetrieved": 0,
+      "influencing": [],
+      "rejected": [],
+      "policy": [],
+      "stepUp": {
+        "required": true,
+        "requirements": [
+          "Re-authenticate with an existing, already-registered MFA factor."
+        ]
+      },
+      "retrievalComplete": true,
+      "counterfactual": {
+        "withoutMeko": {
+          "rawScore": 30,
+          "severity": "medium",
+          "action": "step_up"
+        },
+        "withoutPattern": null
+      },
+      "explanation": [
+        "[event +15] Event comes from a device not seen before on this account.",
+        "[event +15] Event comes from a country not previously used by this account.",
+        "[TOTAL] raw 30 -> severity medium (display 45.1/100) -> base action step_up"
+      ],
+      "checks": {
+        "actionCorrect": true,
+        "severityOk": true,
+        "retrievedOk": true,
+        "influenceOk": true,
+        "rejectedOk": true,
+        "policyOk": true,
+        "evidenceOk": true,
+        "noTrustFromRejected": true,
+        "indexed": true
+      },
+      "pass": true,
+      "timings": {
+        "agentExtractMs": 0,
+        "mekoWriteMs": 0,
+        "indexWaitMs": 0,
+        "retrievalMs": 1211.9,
+        "scoringMs": 0.1
+      }
+    },
+    {
+      "suite": "CORE",
+      "id": "S4",
+      "title": "MFA reset after a suspicious help-desk interaction",
+      "expected": {
+        "actions": [
+          "block"
+        ],
+        "severities": [
+          "critical"
+        ],
+        "memoriesRetrieved": true,
+        "influences": [
+          "context"
+        ]
+      },
+      "classification": "correct",
+      "actual": {
+        "action": "block",
+        "baseAction": "block",
+        "severity": "critical",
+        "rawScore": 125,
+        "displayScore": 91.8
+      },
+      "memoriesRetrieved": 8,
+      "influencing": [
+        {
+          "memoryId": "mem-06",
+          "source": "context",
+          "label": "CLAIMED",
+          "kind": "role_claim",
+          "effect": 5,
+          "statement": "Caller claims the role of CFO."
+        },
+        {
+          "memoryId": "mem-07",
+          "source": "context",
+          "label": "OBSERVED",
+          "kind": "caller_id_mismatch",
+          "effect": 15,
+          "statement": "Inbound caller ID does not match the number on file."
+        },
+        {
+          "memoryId": "mem-08",
+          "source": "context",
+          "label": "CLAIMED",
+          "kind": "request_mfa_reset",
+          "effect": 10,
+          "statement": "Caller requests an MFA reset/change."
+        },
+        {
+          "memoryId": "mem-09",
+          "source": "context",
+          "label": "OBSERVED",
+          "kind": "verification_resistance",
+          "effect": 15,
+          "statement": "Caller resisted or tried to skip verification."
+        },
+        {
+          "memoryId": "mem-10",
+          "source": "context",
+          "label": "CLAIMED",
+          "kind": "lost_device_claim",
+          "effect": 10,
+          "statement": "Caller claims their phone/device was lost, stolen or replaced."
+        },
+        {
+          "memoryId": "mem-11",
+          "source": "context",
+          "label": "CLAIMED",
+          "kind": "mfa_unavailable_claim",
+          "effect": 10,
+          "statement": "Caller claims they cannot receive or use their MFA code."
+        },
+        {
+          "memoryId": "mem-12",
+          "source": "context",
+          "label": "OBSERVED",
+          "kind": "urgency_pressure",
+          "effect": 10,
+          "statement": "Caller applied urgency/time pressure."
+        }
+      ],
+      "rejected": [],
+      "policy": [],
+      "stepUp": {
+        "required": false,
+        "requirements": []
+      },
+      "retrievalComplete": true,
+      "counterfactual": {
+        "withoutMeko": {
+          "rawScore": 50,
+          "severity": "high",
+          "action": "block"
+        },
+        "withoutPattern": null
+      },
+      "explanation": [
+        "[event +20] MFA method was changed (high-value account-takeover step).",
+        "[event +15] Event comes from a device not seen before on this account.",
+        "[event +15] Event comes from a country not previously used by this account.",
+        "[CLAIMED +5] \"Caller claims the role of CFO.\" - unverified caller statement; treated as a risk signal, NOT as a fact.",
+        "[OBSERVED +15] Inbound caller ID does not match the number on file.",
+        "[CLAIMED +10] \"Caller requests an MFA reset/change.\" - unverified caller statement; treated as a risk signal, NOT as a fact.",
+        "[OBSERVED +15] Caller resisted or tried to skip verification.",
+        "[CLAIMED +10] \"Caller claims their phone/device was lost, stolen or replaced.\" - unverified caller statement; treated as a risk signal, NOT as a fact.",
+        "[CLAIMED +0] \"Caller claims to be Dana Whitfield.\" - unverified caller statement; treated as a risk signal, NOT as a fact.",
+        "[CLAIMED +10] \"Caller claims they cannot receive or use their MFA code.\" - unverified caller statement; treated as a risk signal, NOT as a fact.",
+        "[OBSERVED +10] Caller applied urgency/time pressure.",
+        "[TOTAL] raw 125 -> severity critical (display 91.8/100) -> base action block"
+      ],
+      "checks": {
+        "actionCorrect": true,
+        "severityOk": true,
+        "retrievedOk": true,
+        "influenceOk": true,
+        "rejectedOk": true,
+        "policyOk": true,
+        "evidenceOk": true,
+        "noTrustFromRejected": true,
+        "indexed": true
+      },
+      "pass": true,
+      "timings": {
+        "agentExtractMs": 3.1,
+        "mekoWriteMs": 4611.6,
+        "indexWaitMs": 828.1,
+        "retrievalMs": 818.1,
+        "scoringMs": 0.5
+      }
+    },
+    {
+      "suite": "CORE",
+      "id": "S5",
+      "title": "Payroll bank-detail change after identity compromise",
+      "expected": {
+        "actions": [
+          "block"
+        ],
+        "severities": [
+          "critical",
+          "high"
+        ],
+        "memoriesRetrieved": true,
+        "influences": [
+          "context"
+        ]
+      },
+      "classification": "correct",
+      "actual": {
+        "action": "block",
+        "baseAction": "block",
+        "severity": "critical",
+        "rawScore": 100,
+        "displayScore": 86.5
+      },
+      "memoriesRetrieved": 5,
+      "influencing": [
+        {
+          "memoryId": "mem-13",
+          "source": "context",
+          "label": "CLAIMED",
+          "kind": "role_claim",
+          "effect": 5,
+          "statement": "Caller claims the role of ADMINISTRATOR."
+        },
+        {
+          "memoryId": "mem-14",
+          "source": "context",
+          "label": "OBSERVED",
+          "kind": "identity_compromise_indicator",
+          "effect": 30,
+          "statement": "MFA on this account was reset within the last hour after a help-desk call that failed verification."
+        },
+        {
+          "memoryId": "mem-15",
+          "source": "context",
+          "label": "CLAIMED",
+          "kind": "request_contact_change",
+          "effect": 5,
+          "statement": "Caller requests a change to phone/email/recovery details."
+        },
+        {
+          "memoryId": "mem-16",
+          "source": "context",
+          "label": "CLAIMED",
+          "kind": "lost_device_claim",
+          "effect": 10,
+          "statement": "Caller claims their phone/device was lost, stolen or replaced."
+        },
+        {
+          "memoryId": "mem-17",
+          "source": "context",
+          "label": "OBSERVED",
+          "kind": "urgency_pressure",
+          "effect": 10,
+          "statement": "Caller applied urgency/time pressure."
+        }
+      ],
+      "rejected": [],
+      "policy": [],
+      "stepUp": {
+        "required": false,
+        "requirements": []
+      },
+      "retrievalComplete": true,
+      "counterfactual": {
+        "withoutMeko": {
+          "rawScore": 40,
+          "severity": "medium",
+          "action": "step_up"
+        },
+        "withoutPattern": null
+      },
+      "explanation": [
+        "[event +25] Payroll/bank details were changed (direct financial-fraud step).",
+        "[event +15] Event comes from a device not seen before on this account.",
+        "[CLAIMED +5] \"Caller claims the role of ADMINISTRATOR.\" - unverified caller statement; treated as a risk signal, NOT as a fact.",
+        "[OBSERVED +30] MFA on this account was reset within the last hour after a help-desk call that failed verification.",
+        "[CLAIMED +5] \"Caller requests a change to phone/email/recovery details.\" - unverified caller statement; treated as a risk signal, NOT as a fact.",
+        "[CLAIMED +10] \"Caller claims their phone/device was lost, stolen or replaced.\" - unverified caller statement; treated as a risk signal, NOT as a fact.",
+        "[OBSERVED +10] Caller applied urgency/time pressure.",
+        "[TOTAL] raw 100 -> severity critical (display 86.5/100) -> base action block"
+      ],
+      "checks": {
+        "actionCorrect": true,
+        "severityOk": true,
+        "retrievedOk": true,
+        "influenceOk": true,
+        "rejectedOk": true,
+        "policyOk": true,
+        "evidenceOk": true,
+        "noTrustFromRejected": true,
+        "indexed": true
+      },
+      "pass": true,
+      "timings": {
+        "agentExtractMs": 1.5,
+        "mekoWriteMs": 2788.3,
+        "indexWaitMs": 764.9,
+        "retrievalMs": 894.9,
+        "scoringMs": 0.2
+      }
+    },
+    {
+      "suite": "CORE",
+      "id": "S6",
+      "title": "Verified callback confirming the legitimate user",
+      "expected": {
+        "actions": [
+          "step_up"
+        ],
+        "severities": [
+          "low",
+          "medium"
+        ],
+        "memoriesRetrieved": true,
+        "influences": [
+          "verified"
+        ],
+        "policyRules": [
+          "sensitive_action_from_unfamiliar_context"
+        ]
+      },
+      "classification": "correct",
+      "actual": {
+        "action": "step_up",
+        "baseAction": "allow",
+        "severity": "low",
+        "rawScore": 10,
+        "displayScore": 18.1
+      },
+      "memoriesRetrieved": 5,
+      "influencing": [
+        {
+          "memoryId": "mem-18",
+          "source": "context",
+          "label": "CLAIMED",
+          "kind": "request_mfa_reset",
+          "effect": 5,
+          "statement": "Caller requests an MFA reset/change."
+        },
+        {
+          "memoryId": "mem-19",
+          "source": "context",
+          "label": "CLAIMED",
+          "kind": "lost_device_claim",
+          "effect": 5,
+          "statement": "Caller claims their phone/device was lost, stolen or replaced."
+        },
+        {
+          "memoryId": "mem-20",
+          "source": "context",
+          "label": "CLAIMED",
+          "kind": "mfa_unavailable_claim",
+          "effect": 5,
+          "statement": "Caller claims they cannot receive or use their MFA code."
+        },
+        {
+          "memoryId": "mem-21",
+          "source": "verified",
+          "label": "VERIFIED",
+          "kind": "callback_verified",
+          "effect": -40,
+          "statement": "Callback to the number on file confirmed the caller is the account owner."
+        }
+      ],
+      "rejected": [],
+      "policy": [
+        {
+          "rule": "sensitive_action_from_unfamiliar_context",
+          "from": "allow",
+          "to": "step_up",
+          "why": "identity evidence (e.g. a verified callback) proves who is calling, not that the unfamiliar device/location is theirs"
+        }
+      ],
+      "stepUp": {
+        "required": true,
+        "requirements": [
+          "Confirm the change through an ALREADY-registered factor or trusted device (never through the help-desk caller).",
+          "Prove possession of the NEW factor/device with a one-time challenge.",
+          "Notify every existing contact point and hold the new factor in a limited-privilege state for a cooling-off period."
+        ]
+      },
+      "retrievalComplete": true,
+      "counterfactual": {
+        "withoutMeko": {
+          "rawScore": 35,
+          "severity": "medium",
+          "action": "step_up"
+        },
+        "withoutPattern": null
+      },
+      "explanation": [
+        "[event +20] MFA method was changed (high-value account-takeover step).",
+        "[event +15] Event comes from a device not seen before on this account.",
+        "[CLAIMED +5] \"Caller requests an MFA reset/change.\" - unverified caller statement; treated as a risk signal, NOT as a fact. (base 10, x0.5 discounted by verified identity)",
+        "[CLAIMED +5] \"Caller claims their phone/device was lost, stolen or replaced.\" - unverified caller statement; treated as a risk signal, NOT as a fact. (base 10, x0.5 discounted by verified identity)",
+        "[CLAIMED +5] \"Caller claims they cannot receive or use their MFA code.\" - unverified caller statement; treated as a risk signal, NOT as a fact. (base 10, x0.5 discounted by verified identity)",
+        "[CLAIMED +0] \"Caller claims to be Priya Nair.\" - unverified caller statement; treated as a risk signal, NOT as a fact.",
+        "[VERIFIED -40] Callback to the number on file confirmed the caller is the account owner. (signature verified; callback_on_file: independent callback confirmed the account owner).",
+        "[TOTAL] raw 10 -> severity low (display 18.1/100) -> base action allow",
+        "[POLICY] sensitive_action_from_unfamiliar_context: allow -> step_up (identity evidence (e.g. a verified callback) proves who is calling, not that the unfamiliar device/location is theirs)"
+      ],
+      "checks": {
+        "actionCorrect": true,
+        "severityOk": true,
+        "retrievedOk": true,
+        "influenceOk": true,
+        "rejectedOk": true,
+        "policyOk": true,
+        "evidenceOk": true,
+        "noTrustFromRejected": true,
+        "indexed": true
+      },
+      "pass": true,
+      "timings": {
+        "agentExtractMs": 1.3,
+        "mekoWriteMs": 2472.5,
+        "indexWaitMs": 772.7,
+        "retrievalMs": 898.2,
+        "scoringMs": 61.2
+      }
+    },
+    {
+      "suite": "CORE",
+      "id": "S7",
+      "title": "Repeat attack matching a previously stored VERIFIED attack pattern",
+      "expected": {
+        "actions": [
+          "block"
+        ],
+        "severities": [
+          "critical",
+          "high"
+        ],
+        "memoriesRetrieved": true,
+        "influences": [
+          "pattern"
+        ]
+      },
+      "classification": "correct",
+      "actual": {
+        "action": "block",
+        "baseAction": "block",
+        "severity": "critical",
+        "rawScore": 85,
+        "displayScore": 81.7
+      },
+      "memoriesRetrieved": 4,
+      "influencing": [
+        {
+          "memoryId": "mem-22",
+          "source": "context",
+          "label": "CLAIMED",
+          "kind": "role_claim",
+          "effect": 5,
+          "statement": "Caller claims the role of CFO."
+        },
+        {
+          "memoryId": "mem-23",
+          "source": "context",
+          "label": "CLAIMED",
+          "kind": "request_mfa_reset",
+          "effect": 10,
+          "statement": "Caller requests an MFA reset/change."
+        },
+        {
+          "memoryId": "mem-24",
+          "source": "context",
+          "label": "CLAIMED",
+          "kind": "lost_device_claim",
+          "effect": 10,
+          "statement": "Caller claims their phone/device was lost, stolen or replaced."
+        },
+        {
+          "memoryId": "mem-25",
+          "source": "pattern",
+          "label": "VERIFIED",
+          "kind": "confirmed_attack_pattern",
+          "effect": 40,
+          "statement": "Confirmed incident INC-2291: executive impersonation takeover. signature=role_claim,lost_device_claim,request_mfa_reset"
+        }
+      ],
+      "rejected": [],
+      "policy": [],
+      "stepUp": {
+        "required": false,
+        "requirements": []
+      },
+      "retrievalComplete": true,
+      "counterfactual": {
+        "withoutMeko": {
+          "rawScore": 20,
+          "severity": "low",
+          "action": "allow"
+        },
+        "withoutPattern": {
+          "rawScore": 45,
+          "severity": "medium",
+          "action": "step_up"
+        }
+      },
+      "explanation": [
+        "[event +20] MFA method was changed (high-value account-takeover step).",
+        "[CLAIMED +5] \"Caller claims the role of CFO.\" - unverified caller statement; treated as a risk signal, NOT as a fact.",
+        "[CLAIMED +10] \"Caller requests an MFA reset/change.\" - unverified caller statement; treated as a risk signal, NOT as a fact.",
+        "[CLAIMED +10] \"Caller claims their phone/device was lost, stolen or replaced.\" - unverified caller statement; treated as a risk signal, NOT as a fact.",
+        "[VERIFIED +40] Matches previously VERIFIED attack pattern (role_claim + lost_device_claim + request_mfa_reset): Confirmed incident INC-2291: executive impersonation takeover. signature=role_claim,lost_device_claim,request_mfa_reset",
+        "[TOTAL] raw 85 -> severity critical (display 81.7/100) -> base action block"
+      ],
+      "checks": {
+        "actionCorrect": true,
+        "severityOk": true,
+        "retrievedOk": true,
+        "influenceOk": true,
+        "rejectedOk": true,
+        "policyOk": true,
+        "evidenceOk": true,
+        "noTrustFromRejected": true,
+        "indexed": true
+      },
+      "pass": true,
+      "timings": {
+        "agentExtractMs": 0.9,
+        "mekoWriteMs": 2758.2,
+        "indexWaitMs": 1473.6,
+        "retrievalMs": 775.5,
+        "scoringMs": 3.6
+      }
+    },
+    {
+      "suite": "HARDENING",
+      "id": "H1",
+      "title": "Legitimate overseas traveller: known laptop, plain login",
+      "expected": {
+        "actions": [
+          "allow",
+          "step_up"
+        ]
+      },
+      "classification": "correct",
+      "actual": {
+        "action": "allow",
+        "baseAction": "allow",
+        "severity": "low",
+        "rawScore": 15,
+        "displayScore": 25.9
+      },
+      "memoriesRetrieved": 0,
+      "influencing": [],
+      "rejected": [],
+      "policy": [],
+      "stepUp": {
+        "required": false,
+        "requirements": []
+      },
+      "retrievalComplete": true,
+      "counterfactual": {
+        "withoutMeko": {
+          "rawScore": 15,
+          "severity": "low",
+          "action": "allow"
+        },
+        "withoutPattern": null
+      },
+      "explanation": [
+        "[event +15] Event comes from a country not previously used by this account.",
+        "[TOTAL] raw 15 -> severity low (display 25.9/100) -> base action allow",
+        "[ADVISORY] notify_user_new_country: Sign-in from a country not used before on a known device: allowed, but notify the account holder out-of-band so a stolen session can be revoked."
+      ],
+      "checks": {
+        "actionCorrect": true,
+        "severityOk": true,
+        "retrievedOk": true,
+        "influenceOk": true,
+        "rejectedOk": true,
+        "policyOk": true,
+        "evidenceOk": true,
+        "noTrustFromRejected": true,
+        "indexed": true
+      },
+      "pass": true,
+      "timings": {
+        "agentExtractMs": 0,
+        "mekoWriteMs": 0,
+        "indexWaitMs": 0,
+        "retrievalMs": 1209.9,
+        "scoringMs": 0.2
+      }
+    },
+    {
+      "suite": "HARDENING",
+      "id": "H2",
+      "title": "Legitimate traveller, laptop stolen abroad: verified callback, MFA change on new device in new country",
+      "expected": {
+        "actions": [
+          "step_up"
+        ],
+        "policyRules": [
+          "sensitive_action_from_unfamiliar_context"
+        ]
+      },
+      "classification": "correct",
+      "actual": {
+        "action": "step_up",
+        "baseAction": "allow",
+        "severity": "low",
+        "rawScore": 20,
+        "displayScore": 33
+      },
+      "memoriesRetrieved": 4,
+      "influencing": [
+        {
+          "memoryId": "mem-26",
+          "source": "context",
+          "label": "CLAIMED",
+          "kind": "request_mfa_reset",
+          "effect": 5,
+          "statement": "Caller requests an MFA reset/change."
+        },
+        {
+          "memoryId": "mem-27",
+          "source": "context",
+          "label": "CLAIMED",
+          "kind": "lost_device_claim",
+          "effect": 5,
+          "statement": "Caller claims their phone/device was lost, stolen or replaced."
+        },
+        {
+          "memoryId": "mem-28",
+          "source": "verified",
+          "label": "VERIFIED",
+          "kind": "callback_verified",
+          "effect": -40,
+          "statement": "Callback to the registered number confirmed the account owner."
+        }
+      ],
+      "rejected": [],
+      "policy": [
+        {
+          "rule": "sensitive_action_from_unfamiliar_context",
+          "from": "allow",
+          "to": "step_up",
+          "why": "identity evidence (e.g. a verified callback) proves who is calling, not that the unfamiliar device/location is theirs"
+        }
+      ],
+      "stepUp": {
+        "required": true,
+        "requirements": [
+          "Confirm the change through an ALREADY-registered factor or trusted device (never through the help-desk caller).",
+          "Prove possession of the NEW factor/device with a one-time challenge.",
+          "Notify every existing contact point and hold the new factor in a limited-privilege state for a cooling-off period."
+        ]
+      },
+      "retrievalComplete": true,
+      "counterfactual": {
+        "withoutMeko": {
+          "rawScore": 50,
+          "severity": "high",
+          "action": "block"
+        },
+        "withoutPattern": null
+      },
+      "explanation": [
+        "[event +20] MFA method was changed (high-value account-takeover step).",
+        "[event +15] Event comes from a device not seen before on this account.",
+        "[event +15] Event comes from a country not previously used by this account.",
+        "[CLAIMED +5] \"Caller requests an MFA reset/change.\" - unverified caller statement; treated as a risk signal, NOT as a fact. (base 10, x0.5 discounted by verified identity)",
+        "[CLAIMED +5] \"Caller claims their phone/device was lost, stolen or replaced.\" - unverified caller statement; treated as a risk signal, NOT as a fact. (base 10, x0.5 discounted by verified identity)",
+        "[CLAIMED +0] \"Caller claims to be Elena Petrov.\" - unverified caller statement; treated as a risk signal, NOT as a fact.",
+        "[VERIFIED -40] Callback to the registered number confirmed the account owner. (signature verified; callback_on_file: independent callback confirmed the account owner).",
+        "[TOTAL] raw 20 -> severity low (display 33/100) -> base action allow",
+        "[POLICY] sensitive_action_from_unfamiliar_context: allow -> step_up (identity evidence (e.g. a verified callback) proves who is calling, not that the unfamiliar device/location is theirs)"
+      ],
+      "checks": {
+        "actionCorrect": true,
+        "severityOk": true,
+        "retrievedOk": true,
+        "influenceOk": true,
+        "rejectedOk": true,
+        "policyOk": true,
+        "evidenceOk": true,
+        "noTrustFromRejected": true,
+        "indexed": true
+      },
+      "pass": true,
+      "timings": {
+        "agentExtractMs": 1.3,
+        "mekoWriteMs": 2023.8,
+        "indexWaitMs": 738.4,
+        "retrievalMs": 913,
+        "scoringMs": 7.8
+      }
+    },
+    {
+      "suite": "HARDENING",
+      "id": "H13",
+      "title": "Legitimate payroll change from known device right after a verified callback",
+      "expected": {
+        "actions": [
+          "step_up"
+        ],
+        "policyRules": [
+          "bank_detail_change_requires_step_up"
+        ]
+      },
+      "classification": "correct",
+      "actual": {
+        "action": "step_up",
+        "baseAction": "allow",
+        "severity": "low",
+        "rawScore": -10,
+        "displayScore": 0
+      },
+      "memoriesRetrieved": 3,
+      "influencing": [
+        {
+          "memoryId": "mem-29",
+          "source": "context",
+          "label": "CLAIMED",
+          "kind": "request_bank_detail_change",
+          "effect": 5,
+          "statement": "Caller requests a change to payroll/bank details."
+        },
+        {
+          "memoryId": "mem-30",
+          "source": "verified",
+          "label": "VERIFIED",
+          "kind": "callback_verified",
+          "effect": -40,
+          "statement": "Callback to the registered number confirmed the account owner."
+        }
+      ],
+      "rejected": [],
+      "policy": [
+        {
+          "rule": "bank_detail_change_requires_step_up",
+          "from": "allow",
+          "to": "step_up",
+          "why": "payroll/bank changes always need step-up, even with strong identity evidence"
+        }
+      ],
+      "stepUp": {
+        "required": true,
+        "requirements": [
+          "Confirm through an already-registered factor or trusted device.",
+          "Hold the payroll change for a review window and notify the previous bank details/contacts.",
+          "Obtain out-of-band approval from payroll/manager."
+        ]
+      },
+      "retrievalComplete": true,
+      "counterfactual": {
+        "withoutMeko": {
+          "rawScore": 25,
+          "severity": "medium",
+          "action": "step_up"
+        },
+        "withoutPattern": null
+      },
+      "explanation": [
+        "[event +25] Payroll/bank details were changed (direct financial-fraud step).",
+        "[CLAIMED +5] \"Caller requests a change to payroll/bank details.\" - unverified caller statement; treated as a risk signal, NOT as a fact. (base 10, x0.5 discounted by verified identity)",
+        "[CLAIMED +0] \"Caller claims to be Tomas Reyes.\" - unverified caller statement; treated as a risk signal, NOT as a fact.",
+        "[VERIFIED -40] Callback to the registered number confirmed the account owner. (signature verified; callback_on_file: independent callback confirmed the account owner).",
+        "[TOTAL] raw -10 -> severity low (display 0/100) -> base action allow",
+        "[POLICY] bank_detail_change_requires_step_up: allow -> step_up (payroll/bank changes always need step-up, even with strong identity evidence)"
+      ],
+      "checks": {
+        "actionCorrect": true,
+        "severityOk": true,
+        "retrievedOk": true,
+        "influenceOk": true,
+        "rejectedOk": true,
+        "policyOk": true,
+        "evidenceOk": true,
+        "noTrustFromRejected": true,
+        "indexed": true
+      },
+      "pass": true,
+      "timings": {
+        "agentExtractMs": 2.2,
+        "mekoWriteMs": 1814.5,
+        "indexWaitMs": 807.6,
+        "retrievalMs": 743.5,
+        "scoringMs": 7.5
+      }
+    },
+    {
+      "suite": "HARDENING",
+      "id": "H15",
+      "title": "Legitimate but stressed user (urgent tone) with verified callback, then routine login",
+      "expected": {
+        "actions": [
+          "allow",
+          "step_up"
+        ]
+      },
+      "classification": "correct",
+      "actual": {
+        "action": "allow",
+        "baseAction": "allow",
+        "severity": "low",
+        "rawScore": -35,
+        "displayScore": 0
+      },
+      "memoriesRetrieved": 4,
+      "influencing": [
+        {
+          "memoryId": "mem-31",
+          "source": "context",
+          "label": "CLAIMED",
+          "kind": "request_password_reset",
+          "effect": 2.5,
+          "statement": "Caller requests a password reset."
+        },
+        {
+          "memoryId": "mem-32",
+          "source": "context",
+          "label": "OBSERVED",
+          "kind": "urgency_pressure",
+          "effect": 2.5,
+          "statement": "Caller applied urgency/time pressure."
+        },
+        {
+          "memoryId": "mem-33",
+          "source": "verified",
+          "label": "VERIFIED",
+          "kind": "identity_verified",
+          "effect": -40,
+          "statement": "Identity confirmed via registered authenticator push."
+        }
+      ],
+      "rejected": [],
+      "policy": [],
+      "stepUp": {
+        "required": false,
+        "requirements": []
+      },
+      "retrievalComplete": true,
+      "counterfactual": {
+        "withoutMeko": {
+          "rawScore": 0,
+          "severity": "low",
+          "action": "allow"
+        },
+        "withoutPattern": null
+      },
+      "explanation": [
+        "[CLAIMED +2.5] \"Caller requests a password reset.\" - unverified caller statement; treated as a risk signal, NOT as a fact. (base 10, x0.5 routine event, x0.5 discounted by verified identity)",
+        "[CLAIMED +0] \"Caller claims to be Anika Rao.\" - unverified caller statement; treated as a risk signal, NOT as a fact. (base 0, x0.5 routine event)",
+        "[OBSERVED +2.5] Caller applied urgency/time pressure. (base 10, x0.5 routine event, x0.5 discounted by verified identity)",
+        "[VERIFIED -40] Identity confirmed via registered authenticator push. (signature verified; authenticator_push: identity independently verified).",
+        "[TOTAL] raw -35 -> severity low (display 0/100) -> base action allow"
+      ],
+      "checks": {
+        "actionCorrect": true,
+        "severityOk": true,
+        "retrievedOk": true,
+        "influenceOk": true,
+        "rejectedOk": true,
+        "policyOk": true,
+        "evidenceOk": true,
+        "noTrustFromRejected": true,
+        "indexed": true
+      },
+      "pass": true,
+      "timings": {
+        "agentExtractMs": 1.1,
+        "mekoWriteMs": 2251.6,
+        "indexWaitMs": 764.5,
+        "retrievalMs": 790.6,
+        "scoringMs": 3.9
+      }
+    },
+    {
+      "suite": "HARDENING",
+      "id": "H3",
+      "title": "CFO takeover backed by a forged verification (signed with the attacker's own key)",
+      "expected": {
+        "actions": [
+          "block"
+        ],
+        "rejected": [
+          "unknown_issuer_or_key"
+        ]
+      },
+      "classification": "correct",
+      "actual": {
+        "action": "block",
+        "baseAction": "block",
+        "severity": "critical",
+        "rawScore": 100,
+        "displayScore": 86.5
+      },
+      "memoriesRetrieved": 4,
+      "influencing": [
+        {
+          "memoryId": "mem-34",
+          "source": "context",
+          "label": "CLAIMED",
+          "kind": "role_claim",
+          "effect": 5,
+          "statement": "Caller claims the role of CFO."
+        },
+        {
+          "memoryId": "mem-35",
+          "source": "context",
+          "label": "CLAIMED",
+          "kind": "request_mfa_reset",
+          "effect": 10,
+          "statement": "Caller requests an MFA reset/change."
+        },
+        {
+          "memoryId": "mem-36",
+          "source": "context",
+          "label": "CLAIMED",
+          "kind": "lost_device_claim",
+          "effect": 10,
+          "statement": "Caller claims their phone/device was lost, stolen or replaced."
+        },
+        {
+          "memoryId": "mem-37",
+          "source": "integrity",
+          "label": "REJECTED_VERIFIED",
+          "kind": "callback_verified",
+          "effect": 40,
+          "statement": "Callback confirmed the caller is the account owner."
+        }
+      ],
+      "rejected": [
+        {
+          "reason": "unknown_issuer_or_key",
+          "kind": "callback_verified",
+          "points": 40
+        }
+      ],
+      "policy": [],
+      "stepUp": {
+        "required": false,
+        "requirements": []
+      },
+      "retrievalComplete": true,
+      "counterfactual": {
+        "withoutMeko": {
+          "rawScore": 35,
+          "severity": "medium",
+          "action": "step_up"
+        },
+        "withoutPattern": null
+      },
+      "explanation": [
+        "[event +20] MFA method was changed (high-value account-takeover step).",
+        "[event +15] Event comes from a device not seen before on this account.",
+        "[CLAIMED +5] \"Caller claims the role of CFO.\" - unverified caller statement; treated as a risk signal, NOT as a fact.",
+        "[CLAIMED +10] \"Caller requests an MFA reset/change.\" - unverified caller statement; treated as a risk signal, NOT as a fact.",
+        "[CLAIMED +10] \"Caller claims their phone/device was lost, stolen or replaced.\" - unverified caller statement; treated as a risk signal, NOT as a fact.",
+        "[REJECTED_VERIFIED +40] REJECTED record claiming VERIFIED (unknown_issuer_or_key: kid 937b5756bf71ce04 / issuer trusttrace-verification-authority is not a trust anchor). Not trusted, not an observation.",
+        "[TOTAL] raw 100 -> severity critical (display 86.5/100) -> base action block"
+      ],
+      "checks": {
+        "actionCorrect": true,
+        "severityOk": true,
+        "retrievedOk": true,
+        "influenceOk": true,
+        "rejectedOk": true,
+        "policyOk": true,
+        "evidenceOk": true,
+        "noTrustFromRejected": true,
+        "indexed": true
+      },
+      "pass": true,
+      "timings": {
+        "agentExtractMs": 1.5,
+        "mekoWriteMs": 2462.3,
+        "indexWaitMs": 837.5,
+        "retrievalMs": 718.9,
+        "scoringMs": 2.8
+      }
+    },
+    {
+      "suite": "HARDENING",
+      "id": "H4",
+      "title": "CFO takeover backed by a forged verification (claims the real authority's key id)",
+      "expected": {
+        "actions": [
+          "block"
+        ],
+        "rejected": [
+          "bad_signature"
+        ]
+      },
+      "classification": "correct",
+      "actual": {
+        "action": "block",
+        "baseAction": "block",
+        "severity": "critical",
+        "rawScore": 100,
+        "displayScore": 86.5
+      },
+      "memoriesRetrieved": 4,
+      "influencing": [
+        {
+          "memoryId": "mem-38",
+          "source": "context",
+          "label": "CLAIMED",
+          "kind": "role_claim",
+          "effect": 5,
+          "statement": "Caller claims the role of CFO."
+        },
+        {
+          "memoryId": "mem-39",
+          "source": "context",
+          "label": "CLAIMED",
+          "kind": "request_mfa_reset",
+          "effect": 10,
+          "statement": "Caller requests an MFA reset/change."
+        },
+        {
+          "memoryId": "mem-40",
+          "source": "context",
+          "label": "CLAIMED",
+          "kind": "lost_device_claim",
+          "effect": 10,
+          "statement": "Caller claims their phone/device was lost, stolen or replaced."
+        },
+        {
+          "memoryId": "mem-41",
+          "source": "integrity",
+          "label": "REJECTED_VERIFIED",
+          "kind": "callback_verified",
+          "effect": 40,
+          "statement": "Callback confirmed the caller is the account owner."
+        }
+      ],
+      "rejected": [
+        {
+          "reason": "bad_signature",
+          "kind": "callback_verified",
+          "points": 40
+        }
+      ],
+      "policy": [],
+      "stepUp": {
+        "required": false,
+        "requirements": []
+      },
+      "retrievalComplete": true,
+      "counterfactual": {
+        "withoutMeko": {
+          "rawScore": 35,
+          "severity": "medium",
+          "action": "step_up"
+        },
+        "withoutPattern": null
+      },
+      "explanation": [
+        "[event +20] MFA method was changed (high-value account-takeover step).",
+        "[event +15] Event comes from a device not seen before on this account.",
+        "[CLAIMED +5] \"Caller claims the role of CFO.\" - unverified caller statement; treated as a risk signal, NOT as a fact.",
+        "[CLAIMED +10] \"Caller requests an MFA reset/change.\" - unverified caller statement; treated as a risk signal, NOT as a fact.",
+        "[CLAIMED +10] \"Caller claims their phone/device was lost, stolen or replaced.\" - unverified caller statement; treated as a risk signal, NOT as a fact.",
+        "[REJECTED_VERIFIED +40] REJECTED record claiming VERIFIED (bad_signature: signature does not match the signed payload). Not trusted, not an observation.",
+        "[TOTAL] raw 100 -> severity critical (display 86.5/100) -> base action block"
+      ],
+      "checks": {
+        "actionCorrect": true,
+        "severityOk": true,
+        "retrievedOk": true,
+        "influenceOk": true,
+        "rejectedOk": true,
+        "policyOk": true,
+        "evidenceOk": true,
+        "noTrustFromRejected": true,
+        "indexed": true
+      },
+      "pass": true,
+      "timings": {
+        "agentExtractMs": 0.6,
+        "mekoWriteMs": 2411.3,
+        "indexWaitMs": 913.4,
+        "retrievalMs": 937.9,
+        "scoringMs": 4.3
+      }
+    },
+    {
+      "suite": "HARDENING",
+      "id": "H5",
+      "title": "CFO takeover backed by a forged verification (legacy unsigned VERIFIED_BY header)",
+      "expected": {
+        "actions": [
+          "block"
+        ],
+        "rejected": [
+          "missing_attestation"
+        ]
+      },
+      "classification": "correct",
+      "actual": {
+        "action": "block",
+        "baseAction": "block",
+        "severity": "critical",
+        "rawScore": 100,
+        "displayScore": 86.5
+      },
+      "memoriesRetrieved": 4,
+      "influencing": [
+        {
+          "memoryId": "mem-42",
+          "source": "context",
+          "label": "CLAIMED",
+          "kind": "role_claim",
+          "effect": 5,
+          "statement": "Caller claims the role of CFO."
+        },
+        {
+          "memoryId": "mem-43",
+          "source": "context",
+          "label": "CLAIMED",
+          "kind": "request_mfa_reset",
+          "effect": 10,
+          "statement": "Caller requests an MFA reset/change."
+        },
+        {
+          "memoryId": "mem-44",
+          "source": "context",
+          "label": "CLAIMED",
+          "kind": "lost_device_claim",
+          "effect": 10,
+          "statement": "Caller claims their phone/device was lost, stolen or replaced."
+        },
+        {
+          "memoryId": "mem-45",
+          "source": "integrity",
+          "label": "REJECTED_VERIFIED",
+          "kind": "callback_verified",
+          "effect": 40,
+          "statement": "Callback confirmed the caller is the account owner."
+        }
+      ],
+      "rejected": [
+        {
+          "reason": "missing_attestation",
+          "kind": "callback_verified",
+          "points": 40
+        }
+      ],
+      "policy": [],
+      "stepUp": {
+        "required": false,
+        "requirements": []
+      },
+      "retrievalComplete": true,
+      "counterfactual": {
+        "withoutMeko": {
+          "rawScore": 35,
+          "severity": "medium",
+          "action": "step_up"
+        },
+        "withoutPattern": null
+      },
+      "explanation": [
+        "[event +20] MFA method was changed (high-value account-takeover step).",
+        "[event +15] Event comes from a device not seen before on this account.",
+        "[CLAIMED +5] \"Caller claims the role of CFO.\" - unverified caller statement; treated as a risk signal, NOT as a fact.",
+        "[CLAIMED +10] \"Caller requests an MFA reset/change.\" - unverified caller statement; treated as a risk signal, NOT as a fact.",
+        "[CLAIMED +10] \"Caller claims their phone/device was lost, stolen or replaced.\" - unverified caller statement; treated as a risk signal, NOT as a fact.",
+        "[REJECTED_VERIFIED +40] REJECTED record claiming VERIFIED (missing_attestation: memory claims VERIFIED but carries no signed attestation). Not trusted, not an observation.",
+        "[TOTAL] raw 100 -> severity critical (display 86.5/100) -> base action block"
+      ],
+      "checks": {
+        "actionCorrect": true,
+        "severityOk": true,
+        "retrievedOk": true,
+        "influenceOk": true,
+        "rejectedOk": true,
+        "policyOk": true,
+        "evidenceOk": true,
+        "noTrustFromRejected": true,
+        "indexed": true
+      },
+      "pass": true,
+      "timings": {
+        "agentExtractMs": 0.6,
+        "mekoWriteMs": 1981.4,
+        "indexWaitMs": 780.2,
+        "retrievalMs": 877.9,
+        "scoringMs": 0.2
+      }
+    },
+    {
+      "suite": "HARDENING",
+      "id": "H6",
+      "title": "CFO takeover backed by a forged verification (real attestation re-used with altered text)",
+      "expected": {
+        "actions": [
+          "block"
+        ],
+        "rejected": [
+          "content_modified"
+        ]
+      },
+      "classification": "correct",
+      "actual": {
+        "action": "block",
+        "baseAction": "block",
+        "severity": "critical",
+        "rawScore": 100,
+        "displayScore": 86.5
+      },
+      "memoriesRetrieved": 4,
+      "influencing": [
+        {
+          "memoryId": "mem-46",
+          "source": "context",
+          "label": "CLAIMED",
+          "kind": "role_claim",
+          "effect": 5,
+          "statement": "Caller claims the role of CFO."
+        },
+        {
+          "memoryId": "mem-47",
+          "source": "context",
+          "label": "CLAIMED",
+          "kind": "request_mfa_reset",
+          "effect": 10,
+          "statement": "Caller requests an MFA reset/change."
+        },
+        {
+          "memoryId": "mem-48",
+          "source": "context",
+          "label": "CLAIMED",
+          "kind": "lost_device_claim",
+          "effect": 10,
+          "statement": "Caller claims their phone/device was lost, stolen or replaced."
+        },
+        {
+          "memoryId": "mem-49",
+          "source": "integrity",
+          "label": "REJECTED_VERIFIED",
+          "kind": "callback_verified",
+          "effect": 40,
+          "statement": "Callback confirmed the caller is the account owner."
+        }
+      ],
+      "rejected": [
+        {
+          "reason": "content_modified",
+          "kind": "callback_verified",
+          "points": 40
+        }
+      ],
+      "policy": [],
+      "stepUp": {
+        "required": false,
+        "requirements": []
+      },
+      "retrievalComplete": true,
+      "counterfactual": {
+        "withoutMeko": {
+          "rawScore": 35,
+          "severity": "medium",
+          "action": "step_up"
+        },
+        "withoutPattern": null
+      },
+      "explanation": [
+        "[event +20] MFA method was changed (high-value account-takeover step).",
+        "[event +15] Event comes from a device not seen before on this account.",
+        "[CLAIMED +5] \"Caller claims the role of CFO.\" - unverified caller statement; treated as a risk signal, NOT as a fact.",
+        "[CLAIMED +10] \"Caller requests an MFA reset/change.\" - unverified caller statement; treated as a risk signal, NOT as a fact.",
+        "[CLAIMED +10] \"Caller claims their phone/device was lost, stolen or replaced.\" - unverified caller statement; treated as a risk signal, NOT as a fact.",
+        "[REJECTED_VERIFIED +40] REJECTED record claiming VERIFIED (content_modified: memory text differs from what the authority attested). Not trusted, not an observation.",
+        "[TOTAL] raw 100 -> severity critical (display 86.5/100) -> base action block"
+      ],
+      "checks": {
+        "actionCorrect": true,
+        "severityOk": true,
+        "retrievedOk": true,
+        "influenceOk": true,
+        "rejectedOk": true,
+        "policyOk": true,
+        "evidenceOk": true,
+        "noTrustFromRejected": true,
+        "indexed": true
+      },
+      "pass": true,
+      "timings": {
+        "agentExtractMs": 0.6,
+        "mekoWriteMs": 2047,
+        "indexWaitMs": 726.6,
+        "retrievalMs": 731.4,
+        "scoringMs": 4.1
+      }
+    },
+    {
+      "suite": "HARDENING",
+      "id": "H7",
+      "title": "CFO takeover backed by a forged verification (real attestation copied from another account)",
+      "expected": {
+        "actions": [
+          "block"
+        ],
+        "rejected": [
+          "account_mismatch"
+        ]
+      },
+      "classification": "correct",
+      "actual": {
+        "action": "block",
+        "baseAction": "block",
+        "severity": "critical",
+        "rawScore": 100,
+        "displayScore": 86.5
+      },
+      "memoriesRetrieved": 4,
+      "influencing": [
+        {
+          "memoryId": "mem-50",
+          "source": "context",
+          "label": "CLAIMED",
+          "kind": "role_claim",
+          "effect": 5,
+          "statement": "Caller claims the role of CFO."
+        },
+        {
+          "memoryId": "mem-51",
+          "source": "context",
+          "label": "CLAIMED",
+          "kind": "request_mfa_reset",
+          "effect": 10,
+          "statement": "Caller requests an MFA reset/change."
+        },
+        {
+          "memoryId": "mem-52",
+          "source": "context",
+          "label": "CLAIMED",
+          "kind": "lost_device_claim",
+          "effect": 10,
+          "statement": "Caller claims their phone/device was lost, stolen or replaced."
+        },
+        {
+          "memoryId": "mem-53",
+          "source": "integrity",
+          "label": "REJECTED_VERIFIED",
+          "kind": "callback_verified",
+          "effect": 40,
+          "statement": "Callback confirmed the caller is the account owner."
+        }
+      ],
+      "rejected": [
+        {
+          "reason": "account_mismatch",
+          "kind": "callback_verified",
+          "points": 40
+        }
+      ],
+      "policy": [],
+      "stepUp": {
+        "required": false,
+        "requirements": []
+      },
+      "retrievalComplete": true,
+      "counterfactual": {
+        "withoutMeko": {
+          "rawScore": 35,
+          "severity": "medium",
+          "action": "step_up"
+        },
+        "withoutPattern": null
+      },
+      "explanation": [
+        "[event +20] MFA method was changed (high-value account-takeover step).",
+        "[event +15] Event comes from a device not seen before on this account.",
+        "[CLAIMED +5] \"Caller claims the role of CFO.\" - unverified caller statement; treated as a risk signal, NOT as a fact.",
+        "[CLAIMED +10] \"Caller requests an MFA reset/change.\" - unverified caller statement; treated as a risk signal, NOT as a fact.",
+        "[CLAIMED +10] \"Caller claims their phone/device was lost, stolen or replaced.\" - unverified caller statement; treated as a risk signal, NOT as a fact.",
+        "[REJECTED_VERIFIED +40] REJECTED record claiming VERIFIED (account_mismatch: attested for acct-someone-else, presented for acct-H7). Not trusted, not an observation.",
+        "[TOTAL] raw 100 -> severity critical (display 86.5/100) -> base action block"
+      ],
+      "checks": {
+        "actionCorrect": true,
+        "severityOk": true,
+        "retrievedOk": true,
+        "influenceOk": true,
+        "rejectedOk": true,
+        "policyOk": true,
+        "evidenceOk": true,
+        "noTrustFromRejected": true,
+        "indexed": true
+      },
+      "pass": true,
+      "timings": {
+        "agentExtractMs": 0.7,
+        "mekoWriteMs": 2348.8,
+        "indexWaitMs": 786.3,
+        "retrievalMs": 746.4,
+        "scoringMs": 1.6
+      }
+    },
+    {
+      "suite": "HARDENING",
+      "id": "H8",
+      "title": "CFO takeover backed by a forged verification (expired real attestation re-stored)",
+      "expected": {
+        "actions": [
+          "block"
+        ],
+        "rejected": [
+          "expired"
+        ]
+      },
+      "classification": "correct",
+      "actual": {
+        "action": "block",
+        "baseAction": "block",
+        "severity": "high",
+        "rawScore": 60,
+        "displayScore": 69.9
+      },
+      "memoriesRetrieved": 4,
+      "influencing": [
+        {
+          "memoryId": "mem-54",
+          "source": "context",
+          "label": "CLAIMED",
+          "kind": "role_claim",
+          "effect": 5,
+          "statement": "Caller claims the role of CFO."
+        },
+        {
+          "memoryId": "mem-55",
+          "source": "context",
+          "label": "CLAIMED",
+          "kind": "request_mfa_reset",
+          "effect": 10,
+          "statement": "Caller requests an MFA reset/change."
+        },
+        {
+          "memoryId": "mem-56",
+          "source": "context",
+          "label": "CLAIMED",
+          "kind": "lost_device_claim",
+          "effect": 10,
+          "statement": "Caller claims their phone/device was lost, stolen or replaced."
+        }
+      ],
+      "rejected": [
+        {
+          "reason": "expired",
+          "kind": "callback_verified",
+          "points": 0
+        }
+      ],
+      "policy": [],
+      "stepUp": {
+        "required": false,
+        "requirements": []
+      },
+      "retrievalComplete": true,
+      "counterfactual": {
+        "withoutMeko": {
+          "rawScore": 35,
+          "severity": "medium",
+          "action": "step_up"
+        },
+        "withoutPattern": null
+      },
+      "explanation": [
+        "[event +20] MFA method was changed (high-value account-takeover step).",
+        "[event +15] Event comes from a device not seen before on this account.",
+        "[CLAIMED +5] \"Caller claims the role of CFO.\" - unverified caller statement; treated as a risk signal, NOT as a fact.",
+        "[CLAIMED +10] \"Caller requests an MFA reset/change.\" - unverified caller statement; treated as a risk signal, NOT as a fact.",
+        "[CLAIMED +10] \"Caller claims their phone/device was lost, stolen or replaced.\" - unverified caller statement; treated as a risk signal, NOT as a fact.",
+        "[REJECTED_VERIFIED +0] REJECTED record claiming VERIFIED (expired: expired 85502s ago). Not trusted, not an observation.",
+        "[TOTAL] raw 60 -> severity high (display 69.9/100) -> base action block"
+      ],
+      "checks": {
+        "actionCorrect": true,
+        "severityOk": true,
+        "retrievedOk": true,
+        "influenceOk": true,
+        "rejectedOk": true,
+        "policyOk": true,
+        "evidenceOk": true,
+        "noTrustFromRejected": true,
+        "indexed": true
+      },
+      "pass": true,
+      "timings": {
+        "agentExtractMs": 0.6,
+        "mekoWriteMs": 2095.2,
+        "indexWaitMs": 742.4,
+        "retrievalMs": 800.1,
+        "scoringMs": 2.4
+      }
+    },
+    {
+      "suite": "HARDENING",
+      "id": "H9",
+      "title": "Repeat attack, SAME wording as the stored verified pattern (control)",
+      "expected": {
+        "actions": [
+          "block"
+        ],
+        "influences": [
+          "pattern"
+        ]
+      },
+      "classification": "correct",
+      "actual": {
+        "action": "block",
+        "baseAction": "block",
+        "severity": "critical",
+        "rawScore": 100,
+        "displayScore": 86.5
+      },
+      "memoriesRetrieved": 4,
+      "influencing": [
+        {
+          "memoryId": "mem-57",
+          "source": "context",
+          "label": "CLAIMED",
+          "kind": "role_claim",
+          "effect": 5,
+          "statement": "Caller claims the role of CFO."
+        },
+        {
+          "memoryId": "mem-58",
+          "source": "context",
+          "label": "CLAIMED",
+          "kind": "request_mfa_reset",
+          "effect": 10,
+          "statement": "Caller requests an MFA reset/change."
+        },
+        {
+          "memoryId": "mem-59",
+          "source": "context",
+          "label": "CLAIMED",
+          "kind": "lost_device_claim",
+          "effect": 10,
+          "statement": "Caller claims their phone/device was lost, stolen or replaced."
+        },
+        {
+          "memoryId": "mem-60",
+          "source": "pattern",
+          "label": "VERIFIED",
+          "kind": "confirmed_attack_pattern",
+          "effect": 40,
+          "statement": "Confirmed incident INC-3310: executive impersonation takeover. signature=role_claim,lost_device_claim,request_mfa_reset"
+        }
+      ],
+      "rejected": [],
+      "policy": [],
+      "stepUp": {
+        "required": false,
+        "requirements": []
+      },
+      "retrievalComplete": true,
+      "counterfactual": {
+        "withoutMeko": {
+          "rawScore": 35,
+          "severity": "medium",
+          "action": "step_up"
+        },
+        "withoutPattern": {
+          "rawScore": 60,
+          "severity": "high",
+          "action": "block"
+        }
+      },
+      "explanation": [
+        "[event +20] MFA method was changed (high-value account-takeover step).",
+        "[event +15] Event comes from a device not seen before on this account.",
+        "[CLAIMED +5] \"Caller claims the role of CFO.\" - unverified caller statement; treated as a risk signal, NOT as a fact.",
+        "[CLAIMED +10] \"Caller requests an MFA reset/change.\" - unverified caller statement; treated as a risk signal, NOT as a fact.",
+        "[CLAIMED +10] \"Caller claims their phone/device was lost, stolen or replaced.\" - unverified caller statement; treated as a risk signal, NOT as a fact.",
+        "[VERIFIED +40] Matches previously VERIFIED attack pattern (role_claim + lost_device_claim + request_mfa_reset): Confirmed incident INC-3310: executive impersonation takeover. signature=role_claim,lost_device_claim,request_mfa_reset",
+        "[TOTAL] raw 100 -> severity critical (display 86.5/100) -> base action block"
+      ],
+      "checks": {
+        "actionCorrect": true,
+        "severityOk": true,
+        "retrievedOk": true,
+        "influenceOk": true,
+        "rejectedOk": true,
+        "policyOk": true,
+        "evidenceOk": true,
+        "noTrustFromRejected": true,
+        "indexed": true
+      },
+      "pass": true,
+      "timings": {
+        "agentExtractMs": 0.7,
+        "mekoWriteMs": 3765.6,
+        "indexWaitMs": 1382.7,
+        "retrievalMs": 774.5,
+        "scoringMs": 2.4
+      }
+    },
+    {
+      "suite": "HARDENING",
+      "id": "H10",
+      "title": "Repeat attack, REWORDED so the stored pattern keywords do not appear",
+      "expected": {
+        "actions": [
+          "block"
+        ],
+        "influences": [
+          "pattern"
+        ],
+        "evidenceKinds": [
+          "role_claim",
+          "lost_device_claim",
+          "request_mfa_reset"
+        ]
+      },
+      "classification": "correct",
+      "actual": {
+        "action": "block",
+        "baseAction": "block",
+        "severity": "critical",
+        "rawScore": 105,
+        "displayScore": 87.8
+      },
+      "memoriesRetrieved": 5,
+      "influencing": [
+        {
+          "memoryId": "mem-61",
+          "source": "context",
+          "label": "CLAIMED",
+          "kind": "request_mfa_reset",
+          "effect": 10,
+          "statement": "Caller requests an MFA reset/change."
+        },
+        {
+          "memoryId": "mem-62",
+          "source": "context",
+          "label": "CLAIMED",
+          "kind": "request_contact_change",
+          "effect": 5,
+          "statement": "Caller requests a change to phone/email/recovery details."
+        },
+        {
+          "memoryId": "mem-63",
+          "source": "context",
+          "label": "CLAIMED",
+          "kind": "role_claim",
+          "effect": 5,
+          "statement": "Caller claims the role of DIRECTORS."
+        },
+        {
+          "memoryId": "mem-64",
+          "source": "context",
+          "label": "CLAIMED",
+          "kind": "lost_device_claim",
+          "effect": 10,
+          "statement": "Caller claims their phone/device was lost, stolen or replaced."
+        },
+        {
+          "memoryId": "mem-65",
+          "source": "pattern",
+          "label": "VERIFIED",
+          "kind": "confirmed_attack_pattern",
+          "effect": 40,
+          "statement": "Confirmed incident INC-3310: executive impersonation takeover. signature=role_claim,lost_device_claim,request_mfa_reset"
+        }
+      ],
+      "rejected": [],
+      "policy": [],
+      "stepUp": {
+        "required": false,
+        "requirements": []
+      },
+      "retrievalComplete": true,
+      "counterfactual": {
+        "withoutMeko": {
+          "rawScore": 35,
+          "severity": "medium",
+          "action": "step_up"
+        },
+        "withoutPattern": {
+          "rawScore": 65,
+          "severity": "high",
+          "action": "block"
+        }
+      },
+      "explanation": [
+        "[event +20] MFA method was changed (high-value account-takeover step).",
+        "[event +15] Event comes from a device not seen before on this account.",
+        "[CLAIMED +10] \"Caller requests an MFA reset/change.\" - unverified caller statement; treated as a risk signal, NOT as a fact.",
+        "[CLAIMED +5] \"Caller requests a change to phone/email/recovery details.\" - unverified caller statement; treated as a risk signal, NOT as a fact.",
+        "[CLAIMED +5] \"Caller claims the role of DIRECTORS.\" - unverified caller statement; treated as a risk signal, NOT as a fact.",
+        "[CLAIMED +10] \"Caller claims their phone/device was lost, stolen or replaced.\" - unverified caller statement; treated as a risk signal, NOT as a fact.",
+        "[VERIFIED +40] Matches previously VERIFIED attack pattern (role_claim + lost_device_claim + request_mfa_reset): Confirmed incident INC-3310: executive impersonation takeover. signature=role_claim,lost_device_claim,request_mfa_reset",
+        "[TOTAL] raw 105 -> severity critical (display 87.8/100) -> base action block"
+      ],
+      "checks": {
+        "actionCorrect": true,
+        "severityOk": true,
+        "retrievedOk": true,
+        "influenceOk": true,
+        "rejectedOk": true,
+        "policyOk": true,
+        "evidenceOk": true,
+        "noTrustFromRejected": true,
+        "indexed": true
+      },
+      "pass": true,
+      "timings": {
+        "agentExtractMs": 0.7,
+        "mekoWriteMs": 2801.8,
+        "indexWaitMs": 1536.9,
+        "retrievalMs": 856.1,
+        "scoringMs": 2.3
+      }
+    },
+    {
+      "suite": "HARDENING",
+      "id": "H11",
+      "title": "Compromised payroll change: stolen credentials, new device AND country, no call at all",
+      "expected": {
+        "actions": [
+          "block"
+        ]
+      },
+      "classification": "correct",
+      "actual": {
+        "action": "block",
+        "baseAction": "block",
+        "severity": "high",
+        "rawScore": 55,
+        "displayScore": 66.7
+      },
+      "memoriesRetrieved": 0,
+      "influencing": [],
+      "rejected": [],
+      "policy": [],
+      "stepUp": {
+        "required": false,
+        "requirements": []
+      },
+      "retrievalComplete": true,
+      "counterfactual": {
+        "withoutMeko": {
+          "rawScore": 55,
+          "severity": "high",
+          "action": "block"
+        },
+        "withoutPattern": null
+      },
+      "explanation": [
+        "[event +25] Payroll/bank details were changed (direct financial-fraud step).",
+        "[event +15] Event comes from a device not seen before on this account.",
+        "[event +15] Event comes from a country not previously used by this account.",
+        "[TOTAL] raw 55 -> severity high (display 66.7/100) -> base action block"
+      ],
+      "checks": {
+        "actionCorrect": true,
+        "severityOk": true,
+        "retrievedOk": true,
+        "influenceOk": true,
+        "rejectedOk": true,
+        "policyOk": true,
+        "evidenceOk": true,
+        "noTrustFromRejected": true,
+        "indexed": true
+      },
+      "pass": true,
+      "timings": {
+        "agentExtractMs": 0,
+        "mekoWriteMs": 0,
+        "indexWaitMs": 0,
+        "retrievalMs": 1108.2,
+        "scoringMs": 0.1
+      }
+    },
+    {
+      "suite": "HARDENING",
+      "id": "H12",
+      "title": "Compromised payroll change from the usual device after a compromise indicator (malware)",
+      "expected": {
+        "actions": [
+          "block"
+        ]
+      },
+      "classification": "correct",
+      "actual": {
+        "action": "block",
+        "baseAction": "block",
+        "severity": "high",
+        "rawScore": 55,
+        "displayScore": 66.7
+      },
+      "memoriesRetrieved": 1,
+      "influencing": [
+        {
+          "memoryId": "mem-66",
+          "source": "context",
+          "label": "OBSERVED",
+          "kind": "identity_compromise_indicator",
+          "effect": 30,
+          "statement": "Password reset by an unfamiliar actor 40 minutes earlier."
+        }
+      ],
+      "rejected": [],
+      "policy": [],
+      "stepUp": {
+        "required": false,
+        "requirements": []
+      },
+      "retrievalComplete": true,
+      "counterfactual": {
+        "withoutMeko": {
+          "rawScore": 25,
+          "severity": "medium",
+          "action": "step_up"
+        },
+        "withoutPattern": null
+      },
+      "explanation": [
+        "[event +25] Payroll/bank details were changed (direct financial-fraud step).",
+        "[OBSERVED +30] Password reset by an unfamiliar actor 40 minutes earlier.",
+        "[TOTAL] raw 55 -> severity high (display 66.7/100) -> base action block"
+      ],
+      "checks": {
+        "actionCorrect": true,
+        "severityOk": true,
+        "retrievedOk": true,
+        "influenceOk": true,
+        "rejectedOk": true,
+        "policyOk": true,
+        "evidenceOk": true,
+        "noTrustFromRejected": true,
+        "indexed": true
+      },
+      "pass": true,
+      "timings": {
+        "agentExtractMs": 0.1,
+        "mekoWriteMs": 493.7,
+        "indexWaitMs": 809.9,
+        "retrievalMs": 856.7,
+        "scoringMs": 0.1
+      }
+    },
+    {
+      "suite": "HARDENING",
+      "id": "H14",
+      "title": "Urgent, reworded reset + second-factor swap request from a new device",
+      "expected": {
+        "actions": [
+          "step_up",
+          "block"
+        ],
+        "evidenceKinds": [
+          "request_password_reset",
+          "request_mfa_reset",
+          "urgency_pressure",
+          "authority_pressure"
+        ]
+      },
+      "classification": "correct",
+      "actual": {
+        "action": "block",
+        "baseAction": "block",
+        "severity": "critical",
+        "rawScore": 85,
+        "displayScore": 81.7
+      },
+      "memoriesRetrieved": 7,
+      "influencing": [
+        {
+          "memoryId": "mem-67",
+          "source": "context",
+          "label": "CLAIMED",
+          "kind": "role_claim",
+          "effect": 5,
+          "statement": "Caller claims to work in finance."
+        },
+        {
+          "memoryId": "mem-68",
+          "source": "context",
+          "label": "CLAIMED",
+          "kind": "request_password_reset",
+          "effect": 10,
+          "statement": "Caller requests a password reset."
+        },
+        {
+          "memoryId": "mem-69",
+          "source": "context",
+          "label": "CLAIMED",
+          "kind": "request_mfa_reset",
+          "effect": 10,
+          "statement": "Caller requests an MFA reset/change."
+        },
+        {
+          "memoryId": "mem-70",
+          "source": "context",
+          "label": "CLAIMED",
+          "kind": "request_contact_change",
+          "effect": 5,
+          "statement": "Caller requests a change to phone/email/recovery details."
+        },
+        {
+          "memoryId": "mem-71",
+          "source": "context",
+          "label": "OBSERVED",
+          "kind": "authority_pressure",
+          "effect": 10,
+          "statement": "Caller invoked authority or threatened consequences."
+        },
+        {
+          "memoryId": "mem-72",
+          "source": "context",
+          "label": "OBSERVED",
+          "kind": "urgency_pressure",
+          "effect": 10,
+          "statement": "Caller applied urgency/time pressure."
+        }
+      ],
+      "rejected": [],
+      "policy": [],
+      "stepUp": {
+        "required": false,
+        "requirements": []
+      },
+      "retrievalComplete": true,
+      "counterfactual": {
+        "withoutMeko": {
+          "rawScore": 35,
+          "severity": "medium",
+          "action": "step_up"
+        },
+        "withoutPattern": null
+      },
+      "explanation": [
+        "[event +20] MFA method was changed (high-value account-takeover step).",
+        "[event +15] Event comes from a device not seen before on this account.",
+        "[CLAIMED +5] \"Caller claims to work in finance.\" - unverified caller statement; treated as a risk signal, NOT as a fact.",
+        "[CLAIMED +10] \"Caller requests a password reset.\" - unverified caller statement; treated as a risk signal, NOT as a fact.",
+        "[CLAIMED +10] \"Caller requests an MFA reset/change.\" - unverified caller statement; treated as a risk signal, NOT as a fact.",
+        "[CLAIMED +5] \"Caller requests a change to phone/email/recovery details.\" - unverified caller statement; treated as a risk signal, NOT as a fact.",
+        "[CLAIMED +0] \"Caller claims to be Marcus.\" - unverified caller statement; treated as a risk signal, NOT as a fact.",
+        "[OBSERVED +10] Caller invoked authority or threatened consequences.",
+        "[OBSERVED +10] Caller applied urgency/time pressure.",
+        "[TOTAL] raw 85 -> severity critical (display 81.7/100) -> base action block"
+      ],
+      "checks": {
+        "actionCorrect": true,
+        "severityOk": true,
+        "retrievedOk": true,
+        "influenceOk": true,
+        "rejectedOk": true,
+        "policyOk": true,
+        "evidenceOk": true,
+        "noTrustFromRejected": true,
+        "indexed": true
+      },
+      "pass": true,
+      "timings": {
+        "agentExtractMs": 0.9,
+        "mekoWriteMs": 3984.5,
+        "indexWaitMs": 820.7,
+        "retrievalMs": 724.8,
+        "scoringMs": 0.2
+      }
+    },
+    {
+      "suite": "HARDENING",
+      "id": "H16",
+      "title": "Calm, polished pretext (no pressure, caller ID fine) asking for a deposit-account update, from a new device",
+      "expected": {
+        "actions": [
+          "step_up",
+          "block"
+        ],
+        "evidenceKinds": [
+          "request_bank_detail_change"
+        ]
+      },
+      "classification": "correct",
+      "actual": {
+        "action": "block",
+        "baseAction": "block",
+        "severity": "high",
+        "rawScore": 55,
+        "displayScore": 66.7
+      },
+      "memoriesRetrieved": 3,
+      "influencing": [
+        {
+          "memoryId": "mem-73",
+          "source": "context",
+          "label": "CLAIMED",
+          "kind": "role_claim",
+          "effect": 5,
+          "statement": "Caller claims to work in accounts."
+        },
+        {
+          "memoryId": "mem-74",
+          "source": "context",
+          "label": "CLAIMED",
+          "kind": "request_bank_detail_change",
+          "effect": 10,
+          "statement": "Caller requests a change to payroll/bank details."
+        }
+      ],
+      "rejected": [],
+      "policy": [],
+      "stepUp": {
+        "required": false,
+        "requirements": []
+      },
+      "retrievalComplete": true,
+      "counterfactual": {
+        "withoutMeko": {
+          "rawScore": 40,
+          "severity": "medium",
+          "action": "step_up"
+        },
+        "withoutPattern": null
+      },
+      "explanation": [
+        "[event +25] Payroll/bank details were changed (direct financial-fraud step).",
+        "[event +15] Event comes from a device not seen before on this account.",
+        "[CLAIMED +5] \"Caller claims to work in accounts.\" - unverified caller statement; treated as a risk signal, NOT as a fact.",
+        "[CLAIMED +10] \"Caller requests a change to payroll/bank details.\" - unverified caller statement; treated as a risk signal, NOT as a fact.",
+        "[CLAIMED +0] \"Caller claims to be Jordan Pike.\" - unverified caller statement; treated as a risk signal, NOT as a fact.",
+        "[TOTAL] raw 55 -> severity high (display 66.7/100) -> base action block"
+      ],
+      "checks": {
+        "actionCorrect": true,
+        "severityOk": true,
+        "retrievedOk": true,
+        "influenceOk": true,
+        "rejectedOk": true,
+        "policyOk": true,
+        "evidenceOk": true,
+        "noTrustFromRejected": true,
+        "indexed": true
+      },
+      "pass": true,
+      "timings": {
+        "agentExtractMs": 0.9,
+        "mekoWriteMs": 2233.8,
+        "indexWaitMs": 755.7,
+        "retrievalMs": 755,
+        "scoringMs": 0.2
+      }
+    }
+  ],
+  "meko": {
+    "conversation_create": {
+      "n": 22,
+      "minMs": 308.2,
+      "p50Ms": 335.3,
+      "p95Ms": 561.5,
+      "maxMs": 1294.5,
+      "meanMs": 395.3
+    },
+    "datapack_search": {
+      "n": 1,
+      "minMs": 337.5,
+      "p50Ms": 337.5,
+      "p95Ms": 337.5,
+      "maxMs": 337.5,
+      "meanMs": 337.5
+    },
+    "memory_search": {
+      "n": 51,
+      "minMs": 667.8,
+      "p50Ms": 780,
+      "p95Ms": 937.4,
+      "maxMs": 1487.5,
+      "meanMs": 810.7
+    },
+    "memory_add": {
+      "n": 83,
+      "minMs": 452.5,
+      "p50Ms": 503.4,
+      "p95Ms": 647.2,
+      "maxMs": 918.8,
+      "meanMs": 518.2
+    }
+  }
+}

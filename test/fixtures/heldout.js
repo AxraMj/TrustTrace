@@ -1,0 +1,90 @@
+// HELD-OUT paraphrase set for Agent A's extraction.
+// Written BEFORE any Phase-4 extraction rule was designed, then frozen (sha256 in heldout.sha256, verified by a test).
+// It must NOT be used to write or tune rules. Same-author caveat: I wrote both this set and the rules, so independence
+// is limited to "frozen first, scored once"; it is not a substitute for utterances from real help-desk transcripts.
+//
+// expected = the exact set of claim/observation kinds a careful reader would extract from the utterance.
+// group: positive (should extract), negative (must extract NOTHING suspicious), hard (idiom, typos, negation, lowercase).
+//
+// kinds: role_claim identity_claim lost_device_claim mfa_unavailable_claim request_mfa_reset request_password_reset
+//        request_contact_change request_bank_detail_change urgency_pressure authority_pressure verification_resistance
+export const HELDOUT = [
+  // ---- positives ----
+  { id: 'P01', group: 'positive', text: "Hi there, Sofia Marin speaking. My phone fell in the river on my hike so I need the login codes sent somewhere else.", expected: ['identity_claim', 'lost_device_claim', 'request_contact_change'] },
+  { id: 'P02', group: 'positive', text: "I'd like my two-step verification removed, I got a new handset and the old authenticator app is gone.", expected: ['request_mfa_reset', 'lost_device_claim'] },
+  { id: 'P03', group: 'positive', text: 'Please clear the authenticator on my profile.', expected: ['request_mfa_reset'] },
+  { id: 'P04', group: 'positive', text: 'Can you disable 2FA for me just for today?', expected: ['request_mfa_reset'] },
+  { id: 'P05', group: 'positive', text: "I don't get the sms codes any more so can you turn that security step off.", expected: ['mfa_unavailable_claim', 'request_mfa_reset'] },
+  { id: 'P06', group: 'positive', text: 'I forgot my password again, could you set me a new one?', expected: ['request_password_reset'] },
+  { id: 'P07', group: 'positive', text: "I'm locked out. Please generate temporary login credentials for me.", expected: ['request_password_reset'] },
+  { id: 'P08', group: 'positive', text: 'The reset link never arrived for my account, send another.', expected: ['request_password_reset'] },
+  { id: 'P09', group: 'positive', text: "I'm the VP of sales and I'm travelling. My mobile was nicked at the station.", expected: ['role_claim', 'lost_device_claim'] },
+  { id: 'P10', group: 'positive', text: 'My name is Okonkwo Adeyemi, I head up the treasury team.', expected: ['identity_claim', 'role_claim'] },
+  { id: 'P11', group: 'positive', text: "This is the CEO's assistant calling, he's stuck in a meeting and needs his access fixed.", expected: ['role_claim'] },
+  { id: 'P12', group: 'positive', text: 'As the owner of the company I need this done today.', expected: ['role_claim'] },
+  { id: 'P13', group: 'positive', text: "I'm a contractor working with the finance group; my access is not working.", expected: ['role_claim'] },
+  { id: 'P14', group: 'positive', text: "Please change where my salary gets paid, I've opened an account at a different bank.", expected: ['request_bank_detail_change'] },
+  { id: 'P15', group: 'positive', text: 'I need my pay routed to a new IBAN starting next month.', expected: ['request_bank_detail_change'] },
+  { id: 'P16', group: 'positive', text: 'Could you swap the bank details on my payroll record?', expected: ['request_bank_detail_change'] },
+  { id: 'P17', group: 'positive', text: 'Update my phone number on file to 555-0142 please.', expected: ['request_contact_change'] },
+  { id: 'P18', group: 'positive', text: "Add a new recovery email for me, it's a personal address.", expected: ['request_contact_change'] },
+  { id: 'P19', group: 'positive', text: 'This is really pressing, I have to be in a board call within the hour.', expected: ['urgency_pressure'] },
+  { id: 'P20', group: 'positive', text: "I'm in a real hurry, can we speed this up?", expected: ['urgency_pressure'] },
+  { id: 'P21', group: 'positive', text: "Do it immediately, I can't hang around.", expected: ['urgency_pressure'] },
+  { id: 'P22', group: 'positive', text: "If this isn't sorted in five minutes I'm calling your manager.", expected: ['authority_pressure', 'urgency_pressure'] },
+  { id: 'P23', group: 'positive', text: 'The chairman is asking about this every few minutes.', expected: ['authority_pressure'] },
+  { id: 'P24', group: 'positive', text: "I'd rather not go through the usual questions, let's just get this done.", expected: ['verification_resistance'] },
+  { id: 'P25', group: 'positive', text: "Don't bother calling me back on that number, just fix it.", expected: ['verification_resistance'] },
+  { id: 'P26', group: 'positive', text: "You really don't need to verify me, you know who I am.", expected: ['verification_resistance'] },
+  { id: 'P27', group: 'positive', text: "I won't be answering your security questions, it's a waste of time.", expected: ['verification_resistance'] },
+  { id: 'P28', group: 'positive', text: 'Lost my work phone yesterday, and the code app lived on it.', expected: ['lost_device_claim'] },
+  { id: 'P29', group: 'positive', text: "My tablet is cracked and won't turn on so I can't see the passcodes.", expected: ['lost_device_claim', 'mfa_unavailable_claim'] },
+  { id: 'P30', group: 'positive', text: 'I never receive the verification texts on my number anymore.', expected: ['mfa_unavailable_claim'] },
+  { id: 'P31', group: 'positive', text: 'The authenticator thing is not working at all for me.', expected: ['mfa_unavailable_claim'] },
+  { id: 'P32', group: 'positive', text: "Priya Raman here, I'm the new regional director.", expected: ['identity_claim', 'role_claim'] },
+  { id: 'P33', group: 'positive', text: "Hello it's Tobias from the payroll office.", expected: ['identity_claim', 'role_claim'] },
+  { id: 'P34', group: 'positive', text: "Speaking with Hannah Cole now, I'm in HR and urgently need an employee's login reset.", expected: ['identity_claim', 'role_claim', 'urgency_pressure', 'request_password_reset'] },
+  { id: 'P35', group: 'positive', text: 'Could you re-enrol me for the authenticator, I deleted the app by accident.', expected: ['request_mfa_reset'] },
+  { id: 'P36', group: 'positive', text: 'Send the codes to my new email instead please.', expected: ['request_contact_change'] },
+  { id: 'P37', group: 'positive', text: "I am the director of operations and my account got locked after too many attempts.", expected: ['role_claim'] },
+  { id: 'P38', group: 'positive', text: 'Could you unlock my login and reset whatever you need to?', expected: ['request_password_reset'] },
+  { id: 'P39', group: 'positive', text: "Please remove the extra security step on my account, it's slowing me down.", expected: ['request_mfa_reset'] },
+  { id: 'P40', group: 'positive', text: "Pay my wages into my wife's account from now on.", expected: ['request_bank_detail_change'] },
+  { id: 'P41', group: 'positive', text: 'I want to alter the account number used for my reimbursements.', expected: ['request_bank_detail_change'] },
+  { id: 'P42', group: 'positive', text: "Management are waiting on me and this can't wait.", expected: ['authority_pressure', 'urgency_pressure'] },
+  { id: 'P43', group: 'positive', text: 'ASAP please!!', expected: ['urgency_pressure'] },
+  { id: 'P44', group: 'positive', text: "My boss will go ballistic if this isn't done.", expected: ['authority_pressure'] },
+  { id: 'P45', group: 'positive', text: "I'm the managing partner, and I need to bypass the callback.", expected: ['role_claim', 'verification_resistance'] },
+  { id: 'P46', group: 'positive', text: "Skip the callback this time, I'm travelling.", expected: ['verification_resistance'] },
+  { id: 'P47', group: 'positive', text: 'Our CFO asked me to call; she cannot access her mailbox and needs her authenticator reset.', expected: ['role_claim', 'request_mfa_reset'] },
+  { id: 'P48', group: 'positive', text: 'I got a replacement mobile and have to move my login approvals onto it.', expected: ['lost_device_claim', 'request_mfa_reset'] },
+
+  // ---- hard: typos, non-native phrasing, lowercase transcripts, idioms ----
+  { id: 'H01', group: 'hard', text: 'Mi phone was stolen and I am abroad, need my second step moved to my wifes number.', expected: ['lost_device_claim', 'request_mfa_reset', 'request_contact_change'] },
+  { id: 'H02', group: 'hard', text: 'pls reset my pasword i cant login', expected: ['request_password_reset'] },
+  { id: 'H03', group: 'hard', text: "i need my 2fa wiped urgently my phone is dead and gone", expected: ['request_mfa_reset', 'urgency_pressure', 'lost_device_claim'] },
+  { id: 'H04', group: 'hard', text: 'The SIM got swapped to a new provider so the texts go nowhere.', expected: ['mfa_unavailable_claim'] },
+  { id: 'H05', group: 'hard', text: "Right, I haven't got all day, get the authenticator off my account.", expected: ['urgency_pressure', 'request_mfa_reset'] },
+
+  // ---- negatives: nothing suspicious should be extracted ----
+  { id: 'N01', group: 'negative', text: "Hello, I'd like to know when my next payslip will be available.", expected: [] },
+  { id: 'N02', group: 'negative', text: 'What time does the help desk close today?', expected: [] },
+  { id: 'N03', group: 'negative', text: "Thanks, the reset email just came through, I'm back in.", expected: [] },
+  { id: 'N04', group: 'negative', text: 'I love the new phone policy, the handsets are much faster.', expected: [] },
+  { id: 'N05', group: 'negative', text: "The director's office asked me to confirm the printer is working.", expected: [] },
+  { id: 'N06', group: 'negative', text: "We're running a security awareness session about password resets and stolen laptops.", expected: [] },
+  { id: 'N07', group: 'negative', text: "Is it possible to schedule a callback for tomorrow instead? I'm in a meeting now.", expected: [] },
+  { id: 'N08', group: 'negative', text: "I'm calling about the cafeteria menu.", expected: [] },
+  { id: 'N09', group: 'negative', text: 'Great service as always, nothing urgent today.', expected: [] },
+  { id: 'N10', group: 'negative', text: "I'm not a director, just a regular analyst, and I'd like to book a training slot.", expected: [] },
+  { id: 'N11', group: 'negative', text: 'Can you explain what two-factor authentication is?', expected: [] },
+  { id: 'N12', group: 'negative', text: 'Please note my new bank holiday schedule.', expected: [] },
+  { id: 'N13', group: 'negative', text: 'I changed my mind about the training course.', expected: [] },
+  { id: 'N14', group: 'negative', text: 'The password policy says 14 characters minimum, is that right?', expected: [] },
+  { id: 'N15', group: 'negative', text: 'I need to update my timesheet for last week.', expected: [] },
+  { id: 'N16', group: 'negative', text: 'Our team lead is on leave so I am covering the standup.', expected: [] },
+  { id: 'N17', group: 'negative', text: 'Thanks for your patience earlier, the wait time was fine.', expected: [] },
+  { id: 'N18', group: 'negative', text: "Please don't skip lunch, the help desk is closing early.", expected: [] },
+  { id: 'N19', group: 'negative', text: "I'm Alex Moreno and I'd like to ask about parking permits.", expected: ['identity_claim'] },
+  { id: 'N20', group: 'negative', text: 'Could you send me the minutes from the last meeting?', expected: [] },
+];
