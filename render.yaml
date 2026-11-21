@@ -1,0 +1,34 @@
+# OPTIONAL Render Blueprint for the demo web service. Creating it requires a Render account (not created yet); the equivalent manual
+# dashboard setup is documented in docs/deployment.md. Fields follow https://render.com/docs/blueprint-spec.
+#
+# No secret values live in this file: DATABASE_URL has `sync: false`, so Render prompts for it in the dashboard.
+# The Meko API key is NOT needed by the web service and must not be added here.
+services:
+  - type: web
+    name: trusttrace-demo
+    runtime: node
+    plan: free
+    # Deploy only when told to (after CI is green), never automatically on every push.
+    autoDeployTrigger: 'off'
+    # NODE_ENV=production also applies during the build and makes npm skip devDependencies, so the frontend install must say --include=dev.
+    buildCommand: npm ci && npm --prefix web ci --include=dev && npm --prefix web run build
+    startCommand: node src/server.js
+    # Process liveness only: never touches the database (use /api/health for real dependency health).
+    healthCheckPath: /api/live
+    envVars:
+      - key: NODE_VERSION
+        value: 24.22.1
+      - key: NODE_ENV
+        value: production
+      - key: API_HOST
+        value: 0.0.0.0
+      - key: WEB_DIST_DIR
+        value: web/dist
+      - key: DATABASE_SSL
+        value: 'true'
+      - key: DB_POOL_MAX
+        value: '5'
+      # TRUST_PROXY_HOPS is intentionally NOT set (0 = ignore X-Forwarded-For). Measure the real value after the first deploy:
+      # see "Client IP behind a proxy" in docs/deployment.md.
+      - key: DATABASE_URL
+        sync: false

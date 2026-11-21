@@ -1,0 +1,152 @@
+# Continuous integration for TrustTrace.
+#
+# What this proves: the backend suite, the PostgreSQL integration suite, the frontend tests and the production build all pass on
+# Node 22.22.2 (the oldest version we claim to support), the newest Node 22, Node 24 (Render's current default) and Node 26 (the version
+# development used). It also serves the REAL production build from the Node server on each version.
+#
+# What it deliberately does NOT do: it holds no secrets and never talks to Meko, so the live-Meko suites (test:integration, test:live-db)
+# are not run here. Third-party actions are pinned to full commit SHAs; permissions are read-only.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backend:
+    name: Backend tests (Node ${{ matrix.node }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        node: ['22.22.2', '22', '24', '26']
+    steps:
+      - name: Check out
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - name: Show versions
+        run: |
+          node --version
+          npm --version
+      - name: Install
+        run: npm ci
+      - name: Offline tests (no network, no database)
+        run: npm test
+
+  frontend:
+    name: Frontend tests, build and serving (Node ${{ matrix.node }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        node: ['22.22.2', '22', '24', '26']
+    steps:
+      - name: Check out
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            web/package-lock.json
+      - name: Show versions
+        run: |
+          node --version
+          npm --version
+      - name: Install frontend
+        working-directory: web
+        run: npm ci
+      - name: Frontend tests
+        working-directory: web
+        run: npm test
+      - name: Production build
+        working-directory: web
+        run: npm run build
+      - name: Build output sanity
+        run: |
+          test -s web/dist/index.html
+          ls -l web/dist/assets
+      - name: Install backend
+        run: npm ci
+      - name: Serve the real production build from the Node server
+        run: node --test --test-concurrency=1 test/api-static.test.js
+
+  database:
+    name: PostgreSQL integration tests (Node ${{ matrix.node }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        node: ['22.22.2', '26']
+    steps:
+      - name: Check out
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - name: Install
+        run: npm ci
+      - name: Start a throw-away PostgreSQL (random password, listens on loopback only)
+        run: |
+          PGPW="$(openssl rand -hex 24)"
+          echo "::add-mask::${PGPW}"
+          docker run -d --name tt-postgres -e POSTGRES_PASSWORD="${PGPW}" -p 127.0.0.1:5432:5432 postgres:17
+          for i in $(seq 1 60); do
+            if docker exec tt-postgres pg_isready -U postgres -h 127.0.0.1 > /dev/null 2>&1; then break; fi
+            sleep 1
+          done
+          docker exec tt-postgres pg_isready -U postgres -h 127.0.0.1
+          echo "DATABASE_URL=postgres://postgres:${PGPW}@127.0.0.1:5432/postgres" >> "$GITHUB_ENV"
+      - name: Migrations, persistence, API and investigation tests
+        run: npm run test:db
+      - name: Remove the database container
+        if: always()
+        run: docker rm -f tt-postgres
+
+  dependency-audit:
+    name: Dependency audit (informational, does not fail the build)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    continue-on-error: true
+    steps:
+      - name: Check out
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24'
+      - name: Audit runtime dependencies (backend)
+        run: npm audit --omit=dev --audit-level=high
+      - name: Audit runtime dependencies (frontend)
+        working-directory: web
+        run: npm audit --omit=dev --audit-level=high

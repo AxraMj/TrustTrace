@@ -4,7 +4,7 @@
   "description": "TrustTrace: ATO / help-desk social engineering detection with Meko shared memory",
   "main": "index.js",
   "scripts": {
-    "test": "node --test --test-concurrency=1 --test-timeout=240000 test/unit.test.js test/scoring.test.js test/regression.test.js test/security.test.js test/retrieval.test.js test/adversarial.test.js test/extraction.test.js test/policy.test.js test/db-core.test.js test/api-auth.test.js test/api-http.test.js test/replay-async.test.js test/activity.test.js test/db-down.test.js test/api-params.test.js test/api-investigation-http.test.js",
+    "test": "node --test --test-concurrency=1 --test-timeout=240000 test/unit.test.js test/scoring.test.js test/regression.test.js test/security.test.js test/retrieval.test.js test/adversarial.test.js test/extraction.test.js test/policy.test.js test/db-core.test.js test/api-auth.test.js test/api-http.test.js test/replay-async.test.js test/activity.test.js test/db-down.test.js test/api-params.test.js test/api-investigation-http.test.js test/api-static.test.js test/api-clientip.test.js test/check-demo-env.test.js test/rotate-password.test.js test/seed-demo.test.js",
     "test:integration": "node --test --test-concurrency=1 test/meko.integration.test.js test/security.integration.test.js test/retrieval.integration.test.js test/pagination.integration.test.js test/scenarios.integration.test.js",
     "demo": "node src/demo.js",
     "check": "node src/check.js",
@@ -16,9 +16,10 @@
     "db:migrate": "node src/cli/dbMigrate.js",
     "db:status": "node src/cli/dbMigrate.js --status",
     "user:create": "node src/cli/userCreate.js",
-    "test:db": "node --test --test-concurrency=1 --test-timeout=300000 test/db/migrations.integration.test.js test/db/persistence.integration.test.js test/db/api.integration.test.js test/db/investigation.integration.test.js",
+    "test:db": "node --test --test-concurrency=1 --test-timeout=300000 test/db/migrations.integration.test.js test/db/persistence.integration.test.js test/db/api.integration.test.js test/db/investigation.integration.test.js test/db/rotate-password.integration.test.js test/db/seed-demo.integration.test.js",
     "test:live-db": "node --test --test-concurrency=1 --test-timeout=600000 test/db/live.integration.test.js",
-    "reports:sanitize": "node scripts/sanitize-evidence.mjs"
+    "reports:sanitize": "node scripts/sanitize-evidence.mjs",
+    "seed:demo": "node --env-file=.env.demo scripts/seed-demo.mjs"
   },
   "keywords": [],
   "author": "",

@@ -2,6 +2,8 @@ import http from 'node:http';
 import { FailureLimiter, RateLimiter, SESSION_COOKIE, hashToken, parseCookies } from './auth.js';
 import { ApiError, newRequestId, readJsonBody, sendJson } from './http.js';
 import { buildRouter } from './routes.js';
+import { clientIpFrom } from './clientIp.js';
+import { createStaticHandler, isStaticPath } from './static.js';
 
 const defaultLogger = (line) => process.stderr.write(JSON.stringify(line) + '\n');
 
@@ -20,13 +22,11 @@ export function createApiServer({ deps, config, clock = Date.now, logger = defau
   const stats = { requests: 0, accessLogFailures: 0 };
   const idleMs = config.sessionIdleMinutes * 60_000;
 
-  const clientIp = (req) => {
-    if (config.trustProxy) {
-      const xff = String(req.headers['x-forwarded-for'] ?? '').split(',')[0].trim();
-      if (xff) return xff;
-    }
-    return req.socket.remoteAddress ?? 'unknown';
-  };
+  const clientIp = (req) => clientIpFrom({
+    xff: req.headers['x-forwarded-for'], remoteAddress: req.socket.remoteAddress, hops: config.trustProxyHops ?? 0, legacyTrustFirst: config.trustProxy,
+  });
+  // The built dashboard, served from this same origin (only when WEB_DIST_DIR is configured).
+  const staticHandler = config.webDistDir ? createStaticHandler({ dir: config.webDistDir, hsts: config.cookieSecure }) : null;
 
   function checkOrigin(req) {
     const origin = req.headers.origin;
@@ -61,6 +61,12 @@ export function createApiServer({ deps, config, clock = Date.now, logger = defau
     const ip = clientIp(req);
     let url;
     try { url = new URL(req.url ?? '/', 'http://localhost'); } catch { url = new URL('/', 'http://localhost'); }
+    // Dashboard files (GET/HEAD outside /api): no router, no rate limiter, no session, no database, no access-log row.
+    if (staticHandler && (req.method === 'GET' || req.method === 'HEAD') && isStaticPath(url.pathname)) {
+      await staticHandler(req, res, url.pathname);
+      if (res.statusCode >= 400) logger({ level: 'info', requestId, method: req.method, static: true, status: res.statusCode, ms: Math.round((performance.now() - t0) * 10) / 10 });
+      return;
+    }
     let status = 500;
     let who = null;
     let route = null;

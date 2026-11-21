@@ -19,6 +19,10 @@ export function buildRouter() {
     return { status: db.ok ? 200 : 503, body: { status: db.ok ? 'ok' : 'degraded', time: new Date(clock()).toISOString(), db: db.ok ? 'up' : 'down' } };
   });
 
+  // Process liveness only: answers 200 if the Node process is running and able to respond. It deliberately does NOT query PostgreSQL
+  // or Meko (use it for platform liveness checks; use /api/health for real dependency health). Public, minimal, never access-logged.
+  r.add('GET', '/api/live', { auth: 'none', noAccessLog: true }, async ({ clock }) => ({ body: { status: 'ok', time: new Date(clock()).toISOString() } }));
+
   r.add('GET', '/api/health/details', ADMIN, async ({ deps }) => ({ body: await deps.health() }));
 
   r.add('POST', '/api/auth/login', { auth: 'none', body: true }, async ({ body, deps, config, clock, ip, req, limiters }) => {

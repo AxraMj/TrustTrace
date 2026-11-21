@@ -28,14 +28,14 @@ export function memoryUsers(clock) {
 
 let hash;
 /** Boot a server with users alice(admin), sam(supervisor), bob(analyst). */
-export async function bootApi({ data = {}, env = {} } = {}) {
+export async function bootApi({ data = {}, env = {}, deps = {} } = {}) {
   hash ??= await hashPassword(PW);
   const clock = makeClock(Date.UTC(2026, 5, 15, 12, 0, 0));
   const users = memoryUsers(clock);
   for (const [name, role] of [['alice', 'admin'], ['sam', 'supervisor'], ['bob', 'analyst']]) users._users.set(name, { id: randomUUID(), username: name, password_hash: hash, role, active: true });
   const config = loadAppConfig({ DATABASE_URL: 'postgres://u:p@localhost:5432/x', ...env });
   const server = createApiServer({
-    deps: { users, data, ping: async () => ({ ok: true }), health: async () => ({ status: 'ok' }), audit: { verify: async () => ({ ok: true, checked: 0, head: null, problems: [] }) } },
+    deps: { users, data, ping: async () => ({ ok: true }), health: async () => ({ status: 'ok' }), audit: { verify: async () => ({ ok: true, checked: 0, head: null, problems: [] }) }, ...deps },
     config, clock: clock.fn, logger: () => {},
   });
   const addr = await listen(server, { host: '127.0.0.1', port: 0 });

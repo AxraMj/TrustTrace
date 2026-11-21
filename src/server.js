@@ -8,12 +8,15 @@ import { ActivityRecorder } from './db/activity.js';
 import { migrationStatus } from './db/migrate.js';
 import { createPool, pingDb } from './db/pool.js';
 import { TrustTraceError } from './errors.js';
+import { assertWebDist } from './api/static.js';
 
 let pool;
 let server;
 try {
   loadDotEnv();
   const config = loadAppConfig();
+  if (config.webDistDir) assertWebDist(config.webDistDir); // misconfiguration must fail at startup, not silently serve API only
+  if (config.trustProxy) console.warn('WARNING: TRUST_PROXY=true trusts the client-controlled FIRST X-Forwarded-For entry; behind a proxy that appends, use TRUST_PROXY_HOPS instead.');
   pool = createPool(config);
   const db = await pingDb(pool);
   if (!db.ok) throw new Error(`cannot connect to PostgreSQL (${db.error}). Is the server running and DATABASE_URL correct?`);
@@ -24,7 +27,7 @@ try {
   const recorder = new ActivityRecorder(pool);
   server = createApiServer({ deps: buildDeps({ pool, config, getServerStats: () => server.stats, getActivityStats: () => recorder.stats() }), config });
   const addr = await listen(server, config);
-  console.log(`TrustTrace API listening on http://${addr.address}:${addr.port} (PostgreSQL ok, schema v${status.applied.length})`);
+  console.log(`TrustTrace API listening on http://${addr.address}:${addr.port} (PostgreSQL ok, schema v${status.applied.length}${config.webDistDir ? ', serving dashboard' : ''})`);
 
   const shutdown = async (sig) => {
     console.log(`${sig}: shutting down`);

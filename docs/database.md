@@ -45,7 +45,9 @@ npm run api                             # REST API on http://127.0.0.1:8787
 | `SESSION_IDLE_MINUTES` | `30` | Idle timeout. |
 | `COOKIE_SECURE` | `true` when `NODE_ENV=production` | Adds the `Secure` flag to the session cookie. |
 | `ALLOWED_ORIGINS` | *(none)* | Comma-separated browser origins allowed to POST cross-origin (e.g. the Vite dev server). |
-| `TRUST_PROXY` | `false` | Trust `X-Forwarded-For` for client IPs (only behind a proxy you control). |
+| `TRUST_PROXY_HOPS` | `0` | Number of trusted proxies that **appended** to `X-Forwarded-For`; the client is the N-th entry from the right. `0` ignores the header. Too small is safe, too large is not: see [`deployment.md`](deployment.md). |
+| `TRUST_PROXY` | `false` | **Legacy, unsafe behind proxies that append:** trusts the client-controlled *first* `X-Forwarded-For` entry. Cannot be combined with `TRUST_PROXY_HOPS`. |
+| `WEB_DIST_DIR` | *(unset)* | Serve the built dashboard (`web/dist`) from the same process and origin as `/api`. Unset = API only. The process refuses to start if the directory has no `index.html`. |
 | `MAX_BODY_BYTES` | `65536` | Request body limit. |
 
 The Meko API key and the verification authority's private key are **not** read by the API server and are never part of any

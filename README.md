@@ -143,6 +143,10 @@ npm run dev                             # http://localhost:5173, proxies /api to
 ```
 Dashboard details (screens, UI rules, limits): [`web/README.md`](web/README.md).
 
+**Single-process mode (same origin, for hosting):** `cd web; npm run build`, then `WEB_DIST_DIR=web/dist npm run api` serves the dashboard and `/api`
+from one process. `GET /api/live` is a database-free liveness probe, `GET /api/health` checks PostgreSQL. Hosting notes, proxy/client-IP handling
+and database connection guidance: [`docs/deployment.md`](docs/deployment.md).
+
 ### All commands
 | Command | What it does |
 |---|---|

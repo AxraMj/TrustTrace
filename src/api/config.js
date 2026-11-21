@@ -28,17 +28,24 @@ export function loadAppConfig(env = process.env) {
   const production = env.NODE_ENV === 'production';
   const origins = (env.ALLOWED_ORIGINS ?? '').split(',').map((s) => s.trim()).filter(Boolean);
   for (const o of origins) if (!/^https?:\/\/[^/\s]+$/.test(o)) throw new AppConfigError(`ALLOWED_ORIGINS entry is not an origin: ${o}`);
+  const trustProxy = bool(env.TRUST_PROXY, false);
+  const trustProxyHops = int(env.TRUST_PROXY_HOPS, 0, { min: 0, max: 5, name: 'TRUST_PROXY_HOPS' });
+  if (trustProxy && trustProxyHops > 0) {
+    throw new AppConfigError('Set either TRUST_PROXY (legacy: trusts the client-controlled FIRST X-Forwarded-For entry) or TRUST_PROXY_HOPS, not both. Prefer TRUST_PROXY_HOPS.');
+  }
   return Object.freeze({
     databaseUrl,
     databaseSsl: bool(env.DATABASE_SSL, false),
     dbPoolMax: int(env.DB_POOL_MAX, 10, { max: 100, name: 'DB_POOL_MAX' }),
     host: (env.API_HOST ?? '').trim() || '127.0.0.1', // loopback by default: expose it deliberately
-    port: int(env.API_PORT, 8787, { max: 65535, name: 'API_PORT' }),
+    port: int(env.API_PORT || env.PORT, 8787, { max: 65535, name: 'API_PORT (or PORT)' }), // platforms such as Render inject PORT; API_PORT wins if both are set
     sessionTtlMinutes: int(env.SESSION_TTL_MINUTES, 480, { max: 60 * 24 * 14, name: 'SESSION_TTL_MINUTES' }),
     sessionIdleMinutes: int(env.SESSION_IDLE_MINUTES, 30, { max: 60 * 24, name: 'SESSION_IDLE_MINUTES' }),
     cookieSecure: bool(env.COOKIE_SECURE, production),
     allowedOrigins: Object.freeze(origins),
-    trustProxy: bool(env.TRUST_PROXY, false),
+    trustProxy, // legacy and unsafe behind proxies that append to X-Forwarded-For; see src/api/clientIp.js
+    trustProxyHops, // number of trusted proxies that APPENDED to X-Forwarded-For (0 = ignore the header)
+    webDistDir: (env.WEB_DIST_DIR ?? '').trim() || null, // set to serve the built dashboard (web/dist) from this process; unset = API only
     maxBodyBytes: int(env.MAX_BODY_BYTES, 64 * 1024, { max: 1024 * 1024, name: 'MAX_BODY_BYTES' }),
     mekoConfigured: Boolean((env.MEKO_API_KEY ?? '').trim()),
   });

@@ -19,6 +19,12 @@ non-browser clients). `POST /api/auth/logout`, `GET /api/auth/me`. Roles (all re
 
 Every authenticated request is written to `access_log` (user, path, status, ip, request id). Any write method returns **405**.
 
+## Liveness and health (public, unauthenticated, minimal)
+* `GET /api/live` — **process liveness only**: `200 {"status":"ok","time":…}` if the Node process can answer. It never queries PostgreSQL or Meko and is not access-logged; use it for platform liveness checks.
+* `GET /api/health` — **dependency health**: queries PostgreSQL; `200 {"status":"ok","db":"up"}` or `503 {"status":"degraded","db":"down"}`.
+
+When `WEB_DIST_DIR` is set, every `GET`/`HEAD` outside `/api` serves the built dashboard (SPA fallback to `index.html` for client-side routes, real 404s for missing files with an extension). Those responses carry their own strict CSP; API responses keep `default-src 'none'`.
+
 ## Conventions
 * **Time range** (`window=15m|1h|6h|24h|7d|30d|90d|all` or `from`/`to` ISO-8601; not both). Defaults: summary/activity 24h, alerts 7d, cases/verification 30d.
 * **Pagination** (lists): `limit` (default 50, max 200) and opaque `cursor`; response has `nextCursor` (null on the last page). Keyset-based,
