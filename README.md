@@ -6,6 +6,24 @@
 > here has been measured on real help-desk traffic. The dashboard is **read-only**: it never blocks an account or changes payroll.
 > See [Known limitations](#known-limitations).
 
+## Live demo
+* **Live demo:** <https://trusttrace-demo.onrender.com>
+* **Source code:** <https://github.com/AxraMj/TrustTrace>
+
+### Demo login
+| | |
+|---|---|
+| **Username** | `judge` |
+| **Password** | *Not published here.* Judges can obtain it securely from the project owner (it is shared privately, never committed to this repository). |
+| **Role** | `supervisor`: read-only access to decisions, evidence and the audit trail. |
+
+Things to know before you open it:
+* **Synthetic data only.** Every account, caller, decision and attestation in the demo is synthetic; no real people or customer data are involved.
+* **The first load can be slow.** The demo runs on Render's free tier, which puts the service to sleep after about 15 minutes without traffic. Waking it
+  can take **50 seconds or more**, so the first page load may look stuck; please wait and refresh once.
+* The demo database holds a small, pre-seeded set of five decisions (allow, step-up and block outcomes, including forged and expired
+  verifications that were rejected). The dashboard is read-only, so nothing you click changes an account.
+
 ## Problem
 Attackers rarely break the login page; they phone the help desk, claim to be the CFO who "lost their phone", and get MFA reset or
 payroll details changed. Two systems each see half of it: the help desk hears the call, the identity system sees the new-device
